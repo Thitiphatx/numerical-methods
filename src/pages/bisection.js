@@ -10,30 +10,32 @@ const Bisection =()=>{
         setValueXm(data.map((x)=>x.Xm));
         setValueXr(data.map((x)=>x.Xr));
         return(
-            <Container>
-                <Table striped bordered hover variant="light">
-                    <thead>
-                        <tr>
-                            <th width="10%">Iteration</th>
-                            <th width="30%">XL</th>
-                            <th width="30%">XM</th>
-                            <th width="30%">XR</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((element, index)=>{
-                            return  (
-                            <tr key={index}>
-                                <td>{element.iteration}</td>
-                                <td>{element.Xl}</td>
-                                <td>{element.Xm}</td>
-                                <td>{element.Xr}</td>
-                            </tr>)
-                        })}
-                    </tbody>
-                </Table>
-            </Container>
-           
+            <Card>
+                <Card.Header>Iteration Table</Card.Header>
+                <Card.Body>
+                    <Table striped bordered hover variant="light">
+                        <thead>
+                            <tr>
+                                <th width="10%">Iteration</th>
+                                <th width="30%">XL</th>
+                                <th width="30%">XM</th>
+                                <th width="30%">XR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((element, index)=>{
+                                return  (
+                                <tr key={index}>
+                                    <td>{element.iteration}</td>
+                                    <td>{element.Xl}</td>
+                                    <td>{element.Xm}</td>
+                                    <td>{element.Xr}</td>
+                                </tr>)
+                            })}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>     
         );
     }
 
@@ -150,13 +152,7 @@ const Bisection =()=>{
                 <Card.Footer>Answer: {X.toPrecision(7)}</Card.Footer>
             </Card>
             <br />
-            <Card>
-                <Card.Header>Iteration Table</Card.Header>
-                <Card.Body>
-                    {html}
-                </Card.Body>
-            </Card>
-            
+            {html}
         </>             
     )
 }
