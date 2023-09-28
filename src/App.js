@@ -6,7 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from './pages/home';
 import Bisection from './pages/bisection';
-import Sample from './pages/test.js';
 import Lagrange from './pages/lagrange.js';
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/bisection" element={<Bisection />} />
-          <Route path="/test" element={<Sample />} />
           <Route path="/lagrange" element={<Lagrange />} />
         </Routes>
         
