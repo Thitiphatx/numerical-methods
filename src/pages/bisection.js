@@ -120,8 +120,10 @@ const Bisection =()=>{
         const xrnum = parseFloat(XR)
         Calbisection(xlnum,xrnum);
      
+        console.log(valueXm);
+        console.log(valueXr);
+
         setHtml(print());
-           
         console.log(valueIter)
         console.log(valueXl)
     }
