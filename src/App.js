@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import HomeNav from './navbar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import Home from './pages/home';
+import Bisection from './pages/bisection';
+import Sample from './pages/test.js';
+import Lagrange from './pages/lagrange.js';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        
+        <HomeNav/>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/bisection" element={<Bisection />} />
+          <Route path="/test" element={<Sample />} />
+          <Route path="/lagrange" element={<Lagrange />} />
+        </Routes>
+        
+      </div>
+    </BrowserRouter>
+    
   );
 }
 
