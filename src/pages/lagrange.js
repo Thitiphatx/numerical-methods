@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Form } from 'react-bootstrap';
-import Container from 'react-bootstrap/Container';
+import { Button, Form, Card } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -30,8 +29,6 @@ class Lagrange extends React.Component {
             X: event.target.value,
         })
     }
-
-
 
     CalLagrange = () => {
         let xString = this.state.xInput.split(",");
@@ -63,30 +60,31 @@ class Lagrange extends React.Component {
 
     render() {
         return(
-            <Container>
-                <h1>Lagrange</h1>
-                <Form>
-                    <Form.Group as={Row} className="mb-3">
-                        <Col>
-                            <Form.Label>Input x</Form.Label>
-                            <Form.Control onChange={this.inputX} type="text" placeholder="0, 1, 2, 3" />
-                        </Col>
-                        <Col>
-                            <Form.Label>Input f(x)</Form.Label>
-                            <Form.Control onChange={this.inputY} type="text" placeholder="5.2, 23.2, 11, 50.2" />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Col>
-                            <Form.Label>Target X</Form.Label>
-                            <Form.Control onChange={this.inputTargetX} type="number" placeholder="42235" />
-                        </Col>
-                    </Form.Group>
-                    <Button variant="primary" onClick={this.CalLagrange}>Calculate</Button>
-                </Form>
-                <br/>
-                <h5>Answer: {this.state.result}</h5>
-            </Container>
+            <Card>
+                <Card.Header>Lagrange Method</Card.Header>
+                <Card.Body>
+                    <Form>
+                        <Form.Group as={Row} className="mb-3">
+                            <Col>
+                                <Form.Label>Input x</Form.Label>
+                                <Form.Control onChange={this.inputX} type="text" placeholder="0, 1, 2, 3" />
+                            </Col>
+                            <Col>
+                                <Form.Label>Input f(x)</Form.Label>
+                                <Form.Control onChange={this.inputY} type="text" placeholder="5.2, 23.2, 11, 50.2" />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Col>
+                                <Form.Label>Target X</Form.Label>
+                                <Form.Control onChange={this.inputTargetX} type="number" placeholder="42235" />
+                            </Col>
+                        </Form.Group>
+                        <Button variant="primary" onClick={this.CalLagrange}>Calculate</Button>
+                    </Form>
+                </Card.Body>
+                <Card.Footer>Answer: {this.state.result}</Card.Footer>
+            </Card>
         )
     }
 }

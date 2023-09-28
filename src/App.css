@@ -1,0 +1,8 @@
+.App {
+    min-height: 100vh;
+    max-width: 100%;
+}
+
+main {
+    margin-top: 1rem;
+}
