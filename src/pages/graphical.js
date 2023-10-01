@@ -73,7 +73,7 @@ class Graphical extends React.Component {
                         <Form.Group as={Row} className="mb-3">
                             <Col>
                                 <Form.Label>F(x)</Form.Label>
-                                <Form.Control autoComplete='on' type="String" onChange={this.inputFx}></Form.Control>
+                                <Form.Control type="String" onChange={this.inputFx}></Form.Control>
                             </Col>
                             <Col>
                                 <Form.Label>Error</Form.Label>
