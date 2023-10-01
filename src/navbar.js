@@ -25,10 +25,19 @@ function HomeNav() {
                   <NavDropdown.Item href="/onepoint">One point</NavDropdown.Item>
                   <NavDropdown.Item href="#" disabled>Newton Raphson</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown title="Inter/Extra -polation">
-                <NavDropdown.Item href="/newton-div-diff" disabled>Newton's Divide-difference</NavDropdown.Item>
+
+                <NavDropdown title="Matrix">
+                  <NavDropdown.Item href="/gauss-elimination" disabled>Gauss Elimination</NavDropdown.Item>
+                  <NavDropdown.Item href="/gauss-jordan" disabled>Gauss Jordan</NavDropdown.Item>
+                  <NavDropdown.Item href="/matrix-inversion" disabled>Matrix Inversion</NavDropdown.Item>
+                </NavDropdown>
+
+                <NavDropdown title="Interpolation">
+                  <NavDropdown.Item href="/newton-div-diff" disabled>Newton's Divide-difference</NavDropdown.Item>
                   <NavDropdown.Item href="/lagrange">Lagrange</NavDropdown.Item>
                 </NavDropdown>
+
+                
             </Nav>
           </Navbar.Collapse>
         </Container>

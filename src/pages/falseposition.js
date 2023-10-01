@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -72,7 +71,6 @@ class FalsePosition extends React.Component {
 
     render() {
         return (
-            <Container>
                 <Card>
                     <Card.Header>False Position Medthod</Card.Header>
                     <Card.Body>
@@ -98,7 +96,6 @@ class FalsePosition extends React.Component {
                     </Card.Body>
                     <Card.Footer>Answer : {this.state.result}</Card.Footer>
                 </Card>
-            </Container>
             
         )
     }
