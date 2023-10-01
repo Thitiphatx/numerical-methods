@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Container, Form, Table, Card } from "react-bootstrap";
+import { Button, Form, Table, Card } from "react-bootstrap";
 import { evaluate } from 'mathjs'
 
 const Bisection =()=>{
