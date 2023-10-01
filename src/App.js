@@ -7,7 +7,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from './pages/home';
 import Bisection from './pages/bisection';
 import Lagrange from './pages/lagrange.js';
+import Onepoint from './pages/onepoint.js';
+import Graphical from './pages/graphical';
 import { Container } from 'react-bootstrap';
+import FalsePosition from './pages/falseposition';
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/bisection" element={<Bisection />} />
               <Route path="/lagrange" element={<Lagrange />} />
+              <Route path="/onepoint" element={<Onepoint />} />
+              <Route path="/graphical" element={<Graphical />} />
+              <Route path="/falseposition" element={<FalsePosition />} />
             </Routes>
           </Container>
         </main>

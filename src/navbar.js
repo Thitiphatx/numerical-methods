@@ -9,20 +9,20 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 function HomeNav() {
   return (
     <>
-      <Navbar className="bg-body-tertiary">
+      <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
           <Navbar.Brand href="/">
-            <FontAwesomeIcon icon={faCalculator} />
-             <span> Numerical methods</span>
+            <FontAwesomeIcon icon={faCalculator} /><span> Numerical methods</span>
           </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse>
             <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
                 <NavDropdown title="Root of equation">
-                  <NavDropdown.Item href="#" disabled>Graphical method</NavDropdown.Item>
+                  <NavDropdown.Item href="/graphical">Graphical method</NavDropdown.Item>
                   <NavDropdown.Item href="/bisection">Bisection</NavDropdown.Item>
-                  <NavDropdown.Item href="#" disabled>False Position</NavDropdown.Item>
-                  <NavDropdown.Item href="#" disabled>One point</NavDropdown.Item>
+                  <NavDropdown.Item href="/falseposition">False Position</NavDropdown.Item>
+                  <NavDropdown.Item href="/onepoint">One point</NavDropdown.Item>
                   <NavDropdown.Item href="#" disabled>Newton Raphson</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="Inter/Extra -polation">
