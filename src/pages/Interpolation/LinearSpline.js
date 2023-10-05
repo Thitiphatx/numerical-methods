@@ -11,7 +11,6 @@ for (let i = 1; i < x.length; i++) {
         break;
     }
 }
-
 let y_interpolation = y[start] + (x_target-x[start])*(y[end] - y[start])/(x[end] - x[start]);
 
-console.log(y_interpolation);
+console.log(x[end]);

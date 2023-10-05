@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import { evaluate } from 'mathjs';
-import { Container } from 'react-bootstrap';
 
 
 class Graphical extends React.Component {

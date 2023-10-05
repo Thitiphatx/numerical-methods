@@ -6,6 +6,32 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+
+const rootOfEquation = [
+  {
+    label: "Graphical Method",
+    link: "/graphical"
+  },
+  {
+    label: "Bisection Method",
+    link: "/bisection",
+  },
+  {
+    label: "False Position",
+    link: "/falseposition",
+  },
+  {
+    label: "Onepoint Iteration",
+    link: "/onepoint",
+  },
+  {
+    label: "Newton Raphson",
+    link: "#",
+  }
+
+]
+
+
 function HomeNav() {
   return (
     <>
@@ -19,11 +45,9 @@ function HomeNav() {
             <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
                 <NavDropdown title="Root of equation">
-                  <NavDropdown.Item href="/graphical">Graphical method</NavDropdown.Item>
-                  <NavDropdown.Item href="/bisection">Bisection</NavDropdown.Item>
-                  <NavDropdown.Item href="/falseposition">False Position</NavDropdown.Item>
-                  <NavDropdown.Item href="/onepoint">One point</NavDropdown.Item>
-                  <NavDropdown.Item href="#" disabled>Newton Raphson</NavDropdown.Item>
+                  {rootOfEquation.map((menu, index)=> (
+                    <NavDropdown.Item key={index} href={menu.link}>{menu.label}</NavDropdown.Item>
+                  ))}
                 </NavDropdown>
 
                 <NavDropdown title="Matrix">

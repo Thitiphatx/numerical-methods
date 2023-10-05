@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Row, Col, Button, Form, Nav, ButtonGroup } from "react-bootstrap";
+import { Card, Row, Col, Button, Form, ButtonGroup } from "react-bootstrap";
 
 class Spline extends Component {
   constructor(props) {
