@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Form, Table, Card } from "react-bootstrap";
+import { Button, Form, Table, Card, Row, Col } from "react-bootstrap";
 import { evaluate } from 'mathjs'
 
 const Bisection =()=>{
@@ -136,13 +136,21 @@ const Bisection =()=>{
                 <Card.Header>Bisection Method</Card.Header>
                 <Card.Body>
                     <Form>
-                        <Form.Group className="mb-3">
-                        <Form.Label>Input f(x)</Form.Label>
-                            <input type="text" id="equation" value={Equation} onChange={inputEquation} style={{width:"20%", margin:"0 auto"}} className="form-control"></input>
-                            <Form.Label>Input XL</Form.Label>
-                            <input type="number" id="XL" onChange={inputXL} style={{width:"20%", margin:"0 auto"}} className="form-control"></input>
-                            <Form.Label>Input XR</Form.Label>
-                            <input type="number" id="XR" onChange={inputXR} style={{width:"20%", margin:"0 auto"}} className="form-control"></input>
+                        <Form.Group as={Row} className="mb-3">
+                            <Col>
+                                <Form.Label>Input f(x)</Form.Label>
+                                <Form.Control type="text" onChange={inputEquation}></Form.Control>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Col>
+                                <Form.Label>Input XL</Form.Label>
+                                <Form.Control type="number" onChange={inputXL}></Form.Control>
+                            </Col>
+                            <Col>
+                                <Form.Label>Input XR</Form.Label>
+                                <Form.Control type="number" onChange={inputXR}></Form.Control>
+                            </Col>
                         </Form.Group>
                         <Button variant="primary" onClick={calculateRoot}>
                             Calculate
@@ -151,7 +159,6 @@ const Bisection =()=>{
                 </Card.Body>
                 <Card.Footer>Answer: {X.toPrecision(7)}</Card.Footer>
             </Card>
-            <br />
             {html}
         </>             
     )

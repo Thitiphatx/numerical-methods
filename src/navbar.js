@@ -35,6 +35,7 @@ function HomeNav() {
                 <NavDropdown title="Interpolation">
                   <NavDropdown.Item href="/newton-div-diff" disabled>Newton's Divide-difference</NavDropdown.Item>
                   <NavDropdown.Item href="/lagrange">Lagrange</NavDropdown.Item>
+                  <NavDropdown.Item href="/spline">Spline</NavDropdown.Item>
                 </NavDropdown>
 
                 

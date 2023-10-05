@@ -11,6 +11,7 @@ import Onepoint from './pages/onepoint.js';
 import Graphical from './pages/graphical';
 import { Container } from 'react-bootstrap';
 import FalsePosition from './pages/falseposition';
+import Spline from './pages/Interpolation/Spline';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/onepoint" element={<Onepoint />} />
               <Route path="/graphical" element={<Graphical />} />
               <Route path="/falseposition" element={<FalsePosition />} />
+              <Route path="/spline" element={<Spline />} />
             </Routes>
           </Container>
         </main>

@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import { evaluate } from 'mathjs';
+import { Container } from 'react-bootstrap';
 
 
 class Graphical extends React.Component {
@@ -36,9 +37,7 @@ class Graphical extends React.Component {
     }
 
     Calculator = () => {
-        let scope = {
-            x: parseFloat(this.state.xStart)
-        }
+        let scope = {x: parseFloat(this.state.xStart)}
 
         let y1 = evaluate(this.state.fx, scope);
         while (y1 != 0) {
@@ -66,31 +65,39 @@ class Graphical extends React.Component {
 
     render() {
         return(
-            <Card>
-                <Card.Header>Graphical Method</Card.Header>
-                <Card.Body>
-                    <Form>
-                        <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>F(x)</Form.Label>
-                                <Form.Control type="String" onChange={this.inputFx}></Form.Control>
-                            </Col>
-                            <Col>
-                                <Form.Label>Error</Form.Label>
-                                <Form.Control type="number" onChange={this.inputError}></Form.Control>
-                            </Col>
-                        </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>From X</Form.Label>
-                                <Form.Control type="number" onChange={this.inputXStart}></Form.Control>
-                            </Col>
-                        </Form.Group>
-                        <Button variant="primary" onClick={this.Calculator}>Calculate</Button>
-                    </Form>
-                </Card.Body>
-                <Card.Footer><h5>Answer: {this.state.result}</h5></Card.Footer>
-            </Card>
+            <>
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Graphical Method</Card.Header>
+                    <Card.Body>
+                        <Form>
+                            <Form.Group as={Row} className="mb-3">
+                                <Col>
+                                    <Form.Label>F(x)</Form.Label>
+                                    <Form.Control type="String" onChange={this.inputFx}></Form.Control>
+                                </Col>
+                                <Col>
+                                    <Form.Label>Error</Form.Label>
+                                    <Form.Control type="number" onChange={this.inputError}></Form.Control>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} className="mb-3">
+                                <Col>
+                                    <Form.Label>From X</Form.Label>
+                                    <Form.Control type="number" onChange={this.inputXStart}></Form.Control>
+                                </Col>
+                            </Form.Group>
+                            <Button variant="primary" onClick={this.Calculator}>Calculate</Button>
+                        </Form>
+                    </Card.Body>
+                    <Card.Footer><h5>Answer: {this.state.result}</h5></Card.Footer>
+                </Card>
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Iteration</Card.Header>
+                    <Card.Body>
+                        
+                    </Card.Body>
+                </Card>
+            </>
         )
     }
 }
