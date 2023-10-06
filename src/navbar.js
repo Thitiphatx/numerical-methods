@@ -26,7 +26,7 @@ const rootOfEquation = [
   },
   {
     label: "Newton Raphson",
-    link: "#",
+    link: "/newtonraphson",
   }
 
 ]

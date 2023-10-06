@@ -12,6 +12,7 @@ import Graphical from './pages/graphical';
 import { Container } from 'react-bootstrap';
 import FalsePosition from './pages/root_of_equation/falseposition';
 import Spline from './pages/Interpolation/Spline';
+import NewtonRaphson from './pages/root_of_equation/newtonraphson';
 
 function App() {
   return (
@@ -23,10 +24,12 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/bisection" element={<Bisection />} />
-              <Route path="/lagrange" element={<Lagrange />} />
               <Route path="/onepoint" element={<Onepoint />} />
               <Route path="/graphical" element={<Graphical />} />
               <Route path="/falseposition" element={<FalsePosition />} />
+              <Route path="/newtonraphson" element={<NewtonRaphson />} />
+
+              <Route path="/lagrange" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
             </Routes>
           </Container>

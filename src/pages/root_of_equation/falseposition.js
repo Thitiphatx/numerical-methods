@@ -34,7 +34,7 @@ class FalsePosition extends React.Component {
     }
 
     Calculator = ()=> {
-        let xl = this.state.xl || 0.000001 ;
+        let xl = this.state.xl || 0.000001;
         let xr = this.state.xr || 0.000001;
         let fx = this.state.fx;
         if (fx == "") return;
@@ -43,9 +43,7 @@ class FalsePosition extends React.Component {
         let fxr = evaluate(fx, {x: xr})
         let x1 = (xl*fxr - xr*fxl)/(fxr-fxl);
         let x1_old = 0;
-        let i = 0;
         while(Math.abs(x1-x1_old)/x1 * 100 >= 0.000001) {
-            i++;
             let fx1 = evaluate(fx, {x: x1})
             
             if (fx1 * fxr > 0) {
@@ -60,7 +58,6 @@ class FalsePosition extends React.Component {
             x1_old = x1;
             x1 = (xl*fxr - xr*fxl)/(fxr-fxl);
         }
-        console.log(i)
         this.setState({result: x1});
         
 

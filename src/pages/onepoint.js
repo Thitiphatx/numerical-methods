@@ -49,15 +49,13 @@ class Onepoint extends React.Component {
                 <Card.Header>Onepoint Iteration</Card.Header>
                 <Card.Body>
                     <Form>
-                        <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>F(x)</Form.Label>
+                        <Form.Group className="mb-3">
+                                <Form.Label>f(x)</Form.Label>
                                 <Form.Control type="text" onChange={this.inputFx} />
-                            </Col>
-                            <Col>
-                                <Form.Label>X0</Form.Label>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                                <Form.Label>x start</Form.Label>
                                 <Form.Control type="number" onChange={this.inputX} />
-                            </Col>
                         </Form.Group>
                         <Button variant="primary" onClick={this.calculator}>Calculate</Button>
                     </Form>
