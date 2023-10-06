@@ -27,6 +27,10 @@ const rootOfEquation = [
   {
     label: "Newton Raphson",
     link: "/newtonraphson",
+  },
+  {
+    label: "Secant Method",
+    link: "/secant",
   }
 
 ]

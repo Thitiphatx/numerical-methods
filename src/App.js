@@ -3,16 +3,22 @@ import './App.css';
 import HomeNav from './navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import Home from './pages/home';
-import Bisection from './pages/bisection';
-import Lagrange from './pages/lagrange.js';
-import Onepoint from './pages/onepoint.js';
-import Graphical from './pages/graphical';
 import { Container } from 'react-bootstrap';
+
+// pages
+import Home from './pages/home';
+
+// Root of equation
+import Bisection from './pages/root_of_equation/bisection';
+import Onepoint from './pages/root_of_equation/onepoint.js';
+import Graphical from './pages/root_of_equation/graphical';
 import FalsePosition from './pages/root_of_equation/falseposition';
-import Spline from './pages/Interpolation/Spline';
 import NewtonRaphson from './pages/root_of_equation/newtonraphson';
+
+// Interpolation
+import Lagrange from './pages/Interpolation/lagrange.js';
+import Spline from './pages/Interpolation/Spline';
+import Secant from './pages/root_of_equation/secant';
 
 function App() {
   return (
@@ -28,6 +34,7 @@ function App() {
               <Route path="/graphical" element={<Graphical />} />
               <Route path="/falseposition" element={<FalsePosition />} />
               <Route path="/newtonraphson" element={<NewtonRaphson />} />
+              <Route path="/secant" element={<Secant />} />
 
               <Route path="/lagrange" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
