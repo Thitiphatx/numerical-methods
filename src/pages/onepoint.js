@@ -36,8 +36,7 @@ class Onepoint extends React.Component {
         do {
             xOld = x;
             x = evaluate(fx, { x });
-            console.log(x)
-        } while (!((Math.abs(x - xOld) / x) * 100 < 0.000001));
+        } while (!((Math.abs(x - xOld) / x) * 100 < 0.000001) && x != undefined);
         
         this.setState({
             result: x,

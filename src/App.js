@@ -10,7 +10,7 @@ import Lagrange from './pages/lagrange.js';
 import Onepoint from './pages/onepoint.js';
 import Graphical from './pages/graphical';
 import { Container } from 'react-bootstrap';
-import FalsePosition from './pages/falseposition';
+import FalsePosition from './pages/root_of_equation/falseposition';
 import Spline from './pages/Interpolation/Spline';
 
 function App() {

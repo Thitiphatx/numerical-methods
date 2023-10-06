@@ -29,11 +29,6 @@ class Graphical extends React.Component {
             xStart: event.target.value,
         })
     }
-    inputError = (event)=> {
-        this.setState({
-            error: event.target.value,
-        })
-    }
 
     Calculator = () => {
         let scope = {x: parseFloat(this.state.xStart)}
@@ -52,7 +47,7 @@ class Graphical extends React.Component {
             
         }
 
-        while (y1 < this.state.error) {
+        while (y1 < 0.000001) {
             scope.x += 0.0001;
             y1 = evaluate(this.state.fx, scope);
         }
@@ -60,8 +55,6 @@ class Graphical extends React.Component {
         this.setState({ result: scope.x });
     }
     
-    
-
     render() {
         return(
             <>
@@ -73,10 +66,6 @@ class Graphical extends React.Component {
                                 <Col>
                                     <Form.Label>F(x)</Form.Label>
                                     <Form.Control type="String" onChange={this.inputFx}></Form.Control>
-                                </Col>
-                                <Col>
-                                    <Form.Label>Error</Form.Label>
-                                    <Form.Control type="number" onChange={this.inputError}></Form.Control>
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row} className="mb-3">
