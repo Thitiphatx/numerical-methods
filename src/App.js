@@ -17,7 +17,7 @@ import NewtonRaphson from './pages/root_of_equation/newtonraphson';
 
 // Interpolation
 import Lagrange from './pages/Interpolation/lagrange.js';
-import Spline from './pages/Interpolation/Spline';
+import Spline from './pages/Interpolation/Spline Old';
 import Secant from './pages/root_of_equation/secant';
 
 function App() {
