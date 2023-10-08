@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Card, Form, Row, Col, Button, Table } from "react-bootstrap";
-
+import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
 
 
 function Graphical() {
     const [fx, setfx] = useState("");
     const [xStart, setXstart] = useState(0);
-    const [iterTable, setIterTable] = useState([
-        {
-            x: 2,
-            fx: 3,
-        }
-    ]);
+    const [lines, setLines] = useState(
+        [
+            {
+                x: 0,
+                fx: 0
+            }
+        ]);
     const [result, setResult] = useState(0);
 
     const inputFx = (event)=> {
@@ -23,9 +24,10 @@ function Graphical() {
     }
 
     const Calculator = () => {
+        const newLines = [];
         let x = xStart;
         let y1 = evaluate(fx, {x: x});
-
+        
         while(y1 != 0) {
             x++;
             let y2 = evaluate(fx, {x: x});
@@ -39,10 +41,14 @@ function Graphical() {
         }
 
         while (y1 < 0.000001) {
+            newLines.push({
+                x: x,
+                fx: y1,
+            })
             x = x+0.000001;
             y1 = evaluate(fx, {x: x});
         }
-
+        setLines(newLines);
         setResult(x);
     }
     
@@ -70,26 +76,23 @@ function Graphical() {
                 <Card.Footer><h5>Answer: {result}</h5></Card.Footer>
             </Card>
             <Card as={Row} className="mb-3">
-                <Card.Header>Iteration</Card.Header>
-                <Card.Body>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th>Iteration</th>
-                                <th>x</th>
-                                <th>f(x)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {iterTable.map((iter, index)=> (
-                                <tr key={index}>
-                                    <td>{index}</td>
-                                    <td>{iter.x}</td>
-                                    <td>{iter.fx}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                <Card.Header>Plot</Card.Header>
+                <Card.Body className="d-flex justify-content-center">
+                    <Plot
+                        data={[
+                            {
+                                x: lines.map((point, index) => (
+                                    point.x
+                                )),
+                                y: lines.map((point, index) => (
+                                    point.fx
+                                )),
+                                mode: 'lines', // Use 'markers' mode for a scatter plot
+                                marker: {color: 'blue'}
+                            }
+                        ]}
+                        config={{ staticPlot: true }}
+                    />
                 </Card.Body>
             </Card>
         </>
