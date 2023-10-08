@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Row, Col, Form, Button, ButtonGroup, ToggleButton, ToggleButtonGroup, InputGroup } from "react-bootstrap";
 
 function Spline() {
+  const [splineType, setSplineType] = useState("Linear");
   const [points, setPoints] = useState([
     {
       x: 0,
@@ -67,7 +68,7 @@ function Spline() {
       <Card.Body>
         <Form>
           <Form.Group as={Row} className="mb-3">
-            <ToggleButtonGroup type="radio" name="splineType" defaultValue={"Linear"}>
+            <ToggleButtonGroup type="radio" name="splineType" defaultValue={splineType}>
               <ToggleButton id="linear-radio" value={"Linear"} variant="outline-primary">Linear</ToggleButton>
               <ToggleButton id="quadratic-radio" value={"Quadratic"} variant="outline-primary">Quadratic</ToggleButton>
               <ToggleButton id="cubic-radio" value={"Cubic"} variant="outline-primary">Cubic</ToggleButton>
