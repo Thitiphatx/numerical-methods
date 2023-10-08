@@ -19,6 +19,7 @@ import NewtonRaphson from './pages/root_of_equation/newtonraphson';
 import Lagrange from './pages/Interpolation/lagrange.js';
 import Spline from './pages/Interpolation/Spline';
 import Secant from './pages/root_of_equation/secant';
+import GaussJordan from './pages/Matrix/gaussjordan';
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
               <Route path="/falseposition" element={<FalsePosition />} />
               <Route path="/newtonraphson" element={<NewtonRaphson />} />
               <Route path="/secant" element={<Secant />} />
+
+              <Route path="/gauss-jordan" element={<GaussJordan />} />
 
               <Route path="/lagrange" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />

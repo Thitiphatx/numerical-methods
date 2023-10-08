@@ -97,28 +97,28 @@ for (let i = 0; i < x.length; i++) {
 //     }
 // }
 
-// // gauss
-// for (let i = 0; i < size; i++) {
-//     let fixed = arr[i][i];
+// gauss
+for (let i = 0; i < size; i++) {
+    let fixed = arr[i][i];
 
-//     if (fixed === 0) {
-//         fixed = 1e-9;
-//     }
+    if (fixed === 0) {
+        fixed = 1e-9;
+    }
 
-//     for (let j = i; j < size; j++) {
-//         arr[i][j] /= fixed;
-//     }
-//     answer[i] /= fixed;
+    for (let j = i; j < size; j++) {
+        arr[i][j] /= fixed;
+    }
+    answer[i] /= fixed;
 
-//     for (let j = 0; j < size; j++) {
-//         if (i === j) continue;
-//         let factor = arr[j][i];
-//         for (let k = i; k < size; k++) {
-//             arr[j][k] -= factor * arr[i][k];
-//         }
-//         answer[j] -= factor * answer[i];
-//     }
-// }
+    for (let j = 0; j < size; j++) {
+        if (i === j) continue;
+        let factor = arr[j][i];
+        for (let k = i; k < size; k++) {
+            arr[j][k] -= factor * arr[i][k];
+        }
+        answer[j] -= factor * answer[i];
+    }
+}
 
 // let y_interpolation = answer[start*3+0]*Math.pow(x_target,2) + answer[start*3+1]*x_target + answer[start*3+2];
 // console.log(y_interpolation)

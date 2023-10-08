@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { Button, Form, Table, Card, Row, Col } from "react-bootstrap";
 import { evaluate } from 'mathjs'
+import Plot from "react-plotly.js";
 
 const Bisection =()=>{
-    const print = () =>{
-        console.log(data)
+    const printTable = () =>{
         setValueIter(data.map((x)=>x.iteration));
         setValueXl(data.map((x)=>x.Xl));
         setValueXm(data.map((x)=>x.Xm));
@@ -38,7 +38,16 @@ const Bisection =()=>{
             </Card>     
         );
     }
-
+    const printPlot = ()=> {
+        return(
+            <Card>
+                <Card.Header>Plot</Card.Header>
+                <Card.Body>
+                    
+                </Card.Body>
+            </Card>
+        )
+    }
     const error =(xold, xnew)=> Math.abs((xnew-xold)/xnew)*100;
    
     const Calbisection = (xl, xr) => {
@@ -96,24 +105,22 @@ const Bisection =()=>{
     const [valueXr, setValueXr] = useState([]);
      
    
-    const [html, setHtml] = useState(null);
+    const [iterTable, setIterTable] = useState(null);
+    const [iterPlot, setIterPlot] = useState(null);
     const [Equation,setEquation] = useState("(x^4)-13")
     const [X,setX] = useState(0)
     const [XL,setXL] = useState(0)
     const [XR,setXR] = useState(0)
 
     const inputEquation = (event) =>{
-        console.log(event.target.value)
         setEquation(event.target.value)
     }
 
     const inputXL = (event) =>{
-        console.log(event.target.value)
         setXL(event.target.value)
     }
 
     const inputXR = (event) =>{
-        console.log(event.target.value)
         setXR(event.target.value)
     }
 
@@ -121,13 +128,9 @@ const Bisection =()=>{
         const xlnum = parseFloat(XL)
         const xrnum = parseFloat(XR)
         Calbisection(xlnum,xrnum);
-     
-        console.log(valueXm);
-        console.log(valueXr);
 
-        setHtml(print());
-        console.log(valueIter)
-        console.log(valueXl)
+        setIterTable(printTable());
+        setIterPlot();
     }
 
     return (
@@ -159,7 +162,7 @@ const Bisection =()=>{
                 </Card.Body>
                 <Card.Footer>Answer: {X.toPrecision(7)}</Card.Footer>
             </Card>
-            {html}
+            {iterTable}
         </>             
     )
 }

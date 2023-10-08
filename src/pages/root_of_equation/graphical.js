@@ -29,6 +29,10 @@ function Graphical() {
         let y1 = evaluate(fx, {x: x});
         
         while(y1 != 0) {
+            newLines.push({
+                x: x,
+                fx: y1,
+            })
             x++;
             let y2 = evaluate(fx, {x: x});
             if (y1 * y2 > 0) {
@@ -38,6 +42,7 @@ function Graphical() {
                 x = x-1;
                 break;
             }
+            
         }
 
         while (y1 < 0.000001) {
@@ -81,17 +86,17 @@ function Graphical() {
                     <Plot
                         data={[
                             {
-                                x: lines.map((point, index) => (
+                                x: lines.map((point) => (
                                     point.x
                                 )),
-                                y: lines.map((point, index) => (
+                                y: lines.map((point) => (
                                     point.fx
                                 )),
-                                mode: 'lines', // Use 'markers' mode for a scatter plot
+                                mode: 'lines',
                                 marker: {color: 'blue'}
                             }
                         ]}
-                        config={{ staticPlot: true }}
+                        config={{ staticPlot: false }}
                     />
                 </Card.Body>
             </Card>
