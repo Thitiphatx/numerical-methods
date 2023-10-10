@@ -1,14 +1,13 @@
 import { useState } from "react"
 import { Button, Form, Table, Card, Row, Col } from "react-bootstrap";
 import { evaluate } from 'mathjs'
-import Plot from "react-plotly.js";
 
 const Bisection =()=>{
     const printTable = () =>{
-        setValueIter(data.map((x)=>x.iteration));
-        setValueXl(data.map((x)=>x.Xl));
-        setValueXm(data.map((x)=>x.Xm));
-        setValueXr(data.map((x)=>x.Xr));
+        // setValueIter(data.map((x)=>x.iteration));
+        // setValueXl(data.map((x)=>x.Xl));
+        // setValueXm(data.map((x)=>x.Xm));
+        // setValueXr(data.map((x)=>x.Xr));
         return(
             <Card>
                 <Card.Header>Iteration Table</Card.Header>
@@ -37,17 +36,7 @@ const Bisection =()=>{
                 </Card.Body>
             </Card>     
         );
-    }
-    const printPlot = ()=> {
-        return(
-            <Card>
-                <Card.Header>Plot</Card.Header>
-                <Card.Body>
-                    
-                </Card.Body>
-            </Card>
-        )
-    }
+    } 
     const error =(xold, xnew)=> Math.abs((xnew-xold)/xnew)*100;
    
     const Calbisection = (xl, xr) => {
@@ -99,14 +88,14 @@ const Bisection =()=>{
     }
 
     const data =[];
-    const [valueIter, setValueIter] = useState([]);
-    const [valueXl, setValueXl] = useState([]);
-    const [valueXm, setValueXm] = useState([]);
-    const [valueXr, setValueXr] = useState([]);
+    // const [valueIter, setValueIter] = useState([]);
+    // const [valueXl, setValueXl] = useState([]);
+    // const [valueXm, setValueXm] = useState([]);
+    // const [valueXr, setValueXr] = useState([]);
      
    
     const [iterTable, setIterTable] = useState(null);
-    const [iterPlot, setIterPlot] = useState(null);
+    // const [iterPlot, setIterPlot] = useState(null);
     const [Equation,setEquation] = useState("(x^4)-13")
     const [X,setX] = useState(0)
     const [XL,setXL] = useState(0)
