@@ -28,7 +28,7 @@ function Graphical() {
         x = parseFloat(xStart);
         y1 = evaluate(fx, {x: x});
         error = 0.000001;
-        maxIteration = 100;
+        maxIteration = 10000;
         iteration = 0;
 
         const newArr = [];
@@ -47,7 +47,8 @@ function Graphical() {
             }
             else {
                 x -= 1;
-                while(y1 >= error) {
+                while(y1 >= error && iteration < maxIteration) {
+                    iteration++;
                     x += 0.000001;
                     y1 = evaluate(fx, {x: x});
                     newArr.push({
