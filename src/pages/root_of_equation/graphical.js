@@ -24,18 +24,15 @@ function Graphical() {
     }
 
     const Calculator = ()=> {
-        let y1, y2, x, iteration, maxIteration, error;
+        let y1, y2, x, error;
         x = parseFloat(xStart);
         y1 = evaluate(fx, {x: x});
         error = 0.000001;
-        maxIteration = 10000;
-        iteration = 0;
 
         const newArr = [];
-
-        while (y1 != 0  && iteration < maxIteration) {
-            iteration++;
-            x++;
+        let step = 1;
+        while(y1 > error && y1 != 0) {
+            x += step;
             y2 = evaluate(fx, {x: x});
 
             if (y1 * y2 > 0) {
@@ -46,22 +43,12 @@ function Graphical() {
                 })
             }
             else {
-                x -= 1;
-                while(y1 >= error && iteration < maxIteration) {
-                    iteration++;
-                    x += 0.000001;
-                    y1 = evaluate(fx, {x: x});
-                    newArr.push({
-                        x: x,
-                        fx: y1,
-                    })
-                }
-            } 
-            
+                x -= step;
+                step /= 10;
+            }
         }
         setResult(x);
         setLines(newArr);
-        console.log(newArr);
 
     }
     
