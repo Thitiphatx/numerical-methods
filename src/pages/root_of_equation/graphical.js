@@ -23,38 +23,45 @@ function Graphical() {
         setXstart(event.target.value);
     }
 
-    const Calculator = () => {
-        const newLines = [];
-        let x = xStart;
-        let y1 = evaluate(fx, {x: x});
-        
-        while(y1 != 0) {
-            newLines.push({
-                x: x,
-                fx: y1,
-            })
+    const Calculator = ()=> {
+        let y1, y2, x, iteration, maxIteration, error;
+        x = parseFloat(xStart);
+        y1 = evaluate(fx, {x: x});
+        error = 0.000001;
+        maxIteration = 100;
+        iteration = 0;
+
+        const newArr = [];
+
+        while (y1 != 0  && iteration < maxIteration) {
+            iteration++;
             x++;
-            let y2 = evaluate(fx, {x: x});
+            y2 = evaluate(fx, {x: x});
+
             if (y1 * y2 > 0) {
                 y1 = y2;
+                newArr.push({
+                    x: x,
+                    fx: y1,
+                })
             }
             else {
-                x = x-1;
-                break;
-            }
+                x -= 1;
+                while(y1 >= error) {
+                    x += 0.000001;
+                    y1 = evaluate(fx, {x: x});
+                    newArr.push({
+                        x: x,
+                        fx: y1,
+                    })
+                }
+            } 
             
         }
-
-        while (y1 < 0.000001) {
-            newLines.push({
-                x: x,
-                fx: y1,
-            })
-            x = x+0.000001;
-            y1 = evaluate(fx, {x: x});
-        }
-        setLines(newLines);
         setResult(x);
+        setLines(newArr);
+        console.log(newArr);
+
     }
     
     return(
