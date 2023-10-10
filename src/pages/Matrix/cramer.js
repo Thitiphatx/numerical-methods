@@ -1,8 +1,9 @@
 import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { det } from "mathjs";
 
-function GaussJordan() {
+function Cramer() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
     const [b, setB] = useState([2,3,4])
     const [size, setSize] = useState(3);
@@ -42,54 +43,76 @@ function GaussJordan() {
     }
 
     const calculator = ()=> {
-        let arr = JSON.parse(JSON.stringify(matrix));;
+        let mainMatrix = JSON.parse(JSON.stringify(matrix));
         let answer = [...b];
+        let cramerResult = [];
+        for (let col = 0; col < size; col++) {
+            // re clone matrix
+            let arr = JSON.parse(JSON.stringify(matrix));
 
+            // replace a[i] with b
+            for (let row = 0; row < size; row++) {
+                arr[row][col] = answer[row];
+            }
+            let det = determinant(mainMatrix);
+            let detI = determinant(arr);
+            cramerResult.push(detI/det);
+        }
+        setResult(cramerResult);
+        
+    }
+
+    const determinant = (matrix)=> {
+        let row = 0;
+        let col = 0;
+        let det = 0;
+        let top = 0;
+        let down = 0;
         for (let i = 0; i < size; i++) {
-            let fixed = arr[i][i];
-        
-            if (fixed === 0) {
-                let swapped = false;
-                for (let j = i + 1; j < size; j++) {
-                    if (arr[j][i] !== 0) {
-                        swapRows(arr, i, j);
-                        swapRows(answer, i, j);
-                        swapped = true;
-                        break;
-                    }
+            col = i;
+            let temp_multiply = 1;
+            while(true) {
+                temp_multiply *= matrix[row][col];
+                row++;
+                col++;
+                if (row >= size) {
+                    row = 0;
+                    break;
                 }
-                if (!swapped) {
-                    return null;
+                if (col >= size) {
+                    col = 0;
                 }
-                fixed = arr[i][i];
             }
-        
-            for (let j = i; j < size; j++) {
-                arr[i][j] /= fixed;
-            }
-            answer[i] /= fixed;
-        
-            for (let j = 0; j < size; j++) {
-                if (i === j) continue;
-                let factor = arr[j][i];
-                for (let k = i; k < size; k++) {
-                    arr[j][k] -= factor * arr[i][k];
-                }
-                answer[j] -= factor * answer[i];
-            }
+            top += temp_multiply;
         }
-        
-        function swapRows(arr, row1, row2) {
-            const temp = arr[row1];
-            arr[row1] = arr[row2];
-            arr[row2] = temp;
+
+        row = 2;
+        col = 0;
+
+        for (let i = size-1; i >= 0; i--) {
+            col = Math.abs(i-2)
+            let temp_multiply = 1;
+            while (true) {
+                temp_multiply *= matrix[row][col];
+                row--;
+                col++;
+                if (row < 0) {
+                    row = 2;
+                    break;
+                }
+                if (col >= size) {
+                    col = 0;
+                }
+            }
+            down += temp_multiply;
         }
-        setResult(answer);
+        det = top-down;
+        return det;
     }
 
     return(
         <Card>
-            <Card.Header>Gauss Jordan</Card.Header>
+            <Card.Header>Cramer's rule</Card.Header>
             <Card.Body>
                 <Form>
                     <Form.Group as={Row} className="mb-3">
@@ -141,4 +164,4 @@ function GaussJordan() {
     )
 }
 
-export default GaussJordan;
+export default Cramer;

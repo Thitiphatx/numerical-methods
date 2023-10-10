@@ -55,7 +55,8 @@ function HomeNav() {
                 </NavDropdown>
 
                 <NavDropdown title="Matrix">
-                  <NavDropdown.Item href="/gauss-elimination" disabled>Gauss Elimination</NavDropdown.Item>
+                  <NavDropdown.Item href="/cramer">Cramer</NavDropdown.Item>
+                  <NavDropdown.Item href="/gauss-elimination">Gauss Elimination</NavDropdown.Item>
                   <NavDropdown.Item href="/gauss-jordan">Gauss Jordan</NavDropdown.Item>
                   <NavDropdown.Item href="/matrix-inversion" disabled>Matrix Inversion</NavDropdown.Item>
                 </NavDropdown>

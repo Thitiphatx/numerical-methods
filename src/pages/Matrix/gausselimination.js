@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 
-function GaussJordan() {
+function GaussElimination() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
     const [b, setB] = useState([2,3,4])
     const [size, setSize] = useState(3);
@@ -47,7 +47,6 @@ function GaussJordan() {
 
         for (let i = 0; i < size; i++) {
             let fixed = arr[i][i];
-        
             if (fixed === 0) {
                 let swapped = false;
                 for (let j = i + 1; j < size; j++) {
@@ -69,8 +68,7 @@ function GaussJordan() {
             }
             answer[i] /= fixed;
         
-            for (let j = 0; j < size; j++) {
-                if (i === j) continue;
+            for (let j = i; j < size; j++) {
                 let factor = arr[j][i];
                 for (let k = i; k < size; k++) {
                     arr[j][k] -= factor * arr[i][k];
@@ -84,12 +82,13 @@ function GaussJordan() {
             arr[row1] = arr[row2];
             arr[row2] = temp;
         }
+        console.log(arr);
         setResult(answer);
     }
 
     return(
         <Card>
-            <Card.Header>Gauss Jordan</Card.Header>
+            <Card.Header>Gauss Elimination</Card.Header>
             <Card.Body>
                 <Form>
                     <Form.Group as={Row} className="mb-3">
@@ -141,4 +140,4 @@ function GaussJordan() {
     )
 }
 
-export default GaussJordan;
+export default GaussElimination;
