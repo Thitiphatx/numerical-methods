@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
-import { det } from "mathjs";
 
 function Cramer() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
@@ -65,7 +64,6 @@ function Cramer() {
     const determinant = (matrix)=> {
         let row = 0;
         let col = 0;
-        let det = 0;
         let top = 0;
         let down = 0;
         for (let i = 0; i < size; i++) {
@@ -106,8 +104,7 @@ function Cramer() {
             }
             down += temp_multiply;
         }
-        det = top-down;
-        return det;
+        return top-down;
     }
 
     return(
