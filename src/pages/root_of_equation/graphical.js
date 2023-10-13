@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { Card, Form, Row, Col, Button } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
+import { generateTable } from '../../functions/generateTable';
 
 
 function Graphical() {
     const [fx, setfx] = useState("");
     const [xStart, setXstart] = useState(0);
-    const [lines, setLines] = useState(
-        [
-            {
-                x: 0,
-                fx: 0
-            }
-        ]);
     const [result, setResult] = useState(0);
+
+    const [resultArr, setResultArr] = useState([]);
+    const [latestData, setLatestData] = useState(null);
 
     const inputFx = (event)=> {
         setfx(event.target.value);
@@ -27,14 +24,13 @@ function Graphical() {
         let y1, y2, x, error;
         x = parseFloat(xStart);
         y1 = evaluate(fx, {x: x});
+        y2 = 0;
         error = 0.000001;
-
         const newArr = [];
         let step = 1;
-        while(y1 > error && y1 != 0) {
+        while(Math.abs(y1) > error && y1 != 0) {
             x += step;
             y2 = evaluate(fx, {x: x});
-
             if (y1 * y2 > 0) {
                 y1 = y2;
                 newArr.push({
@@ -47,9 +43,63 @@ function Graphical() {
                 step /= 10;
             }
         }
+        setLatestData({
+            equation: fx,
+            start: xStart
+        })
         setResult(x);
-        setLines(newArr);
+        setResultArr(newArr);
+    }
 
+    function generatePlot(arr) {
+        if (arr.length == 0) {
+            return null
+        }
+        else {
+            const Graph = [];
+                for (let i = latestData.start-1; i < arr.length+1; i++) {
+                    Graph.push({
+                        x: i,
+                        fx: evaluate(latestData.equation, {x: i}),
+                    });
+                }
+            return (
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Plot</Card.Header>
+                    <Card.Body className="text-center">
+                        <Plot 
+                            data={[
+                                {
+                                    x: Graph.map((point)=> (point.x)),
+                                    y: Graph.map((point)=> (point.fx)),
+                                    mode: "lines",
+                                    marker: {color: 'blue'},
+                                    name: latestData.equation,
+                                },
+                                {
+                                    x: resultArr.map((point)=> (point.x)),
+                                    y: resultArr.map((point)=> (point.fx)),
+                                    mode: "markers",
+                                    marker: {color: 'red'},
+                                    name: "Graphical",
+                                }
+                            ]}
+                            layout={
+                                {
+                                    xaxis: {
+                                        title: "x"
+                                    },
+                                    yaxis: {
+                                        title: "f(x)"
+                                    }
+                                }
+                            }
+                        />
+                    </Card.Body>
+                </Card>
+            )
+        }
+        
     }
     
     return(
@@ -75,26 +125,8 @@ function Graphical() {
                 </Card.Body>
                 <Card.Footer><h5>Answer: {result}</h5></Card.Footer>
             </Card>
-            <Card as={Row} className="mb-3">
-                <Card.Header>Plot</Card.Header>
-                <Card.Body className="d-flex justify-content-center">
-                    <Plot
-                        data={[
-                            {
-                                x: lines.map((point) => (
-                                    point.x
-                                )),
-                                y: lines.map((point) => (
-                                    point.fx
-                                )),
-                                mode: 'lines',
-                                marker: {color: 'blue'}
-                            }
-                        ]}
-                        config={{ staticPlot: false }}
-                    />
-                </Card.Body>
-            </Card>
+            {generatePlot(resultArr)}
+            {generateTable(resultArr)}
         </>
     )
 }
