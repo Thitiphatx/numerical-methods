@@ -3,7 +3,7 @@ import './App.css';
 import HomeNav from './navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container } from 'react-bootstrap';
+import { Container, Card } from 'react-bootstrap';
 
 // pages
 import Home from './pages/home';
@@ -39,17 +39,22 @@ function App() {
               <Route path="/newtonraphson" element={<NewtonRaphson />} />
               <Route path="/secant" element={<Secant />} />
 
-              <Route path="/cramer" element={<Cramer />}/>
-              <Route path="/gauss-elimination" element={<GaussElimination />} />
-              <Route path="/gauss-jordan" element={<GaussJordan />} />
+              <Route path="/cramerrule" element={<Cramer />}/>
+              <Route path="/gausselimination" element={<GaussElimination />} />
+              <Route path="/gaussjordan" element={<GaussJordan />} />
 
-              <Route path="/lagrange" element={<Lagrange />} />
+              <Route path="/lagrangeinter" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
             </Routes>
           </Container>
         </main>
-        
       </div>
+      <footer className="text-center text-muted">
+        <div className="border-top pt-3">
+          <p>KMUTNB, Numerical Methods</p>
+          <p>Thitiphat Kunrong 6504062630081</p>
+        </div>
+      </footer>
     </BrowserRouter>
     
   );
