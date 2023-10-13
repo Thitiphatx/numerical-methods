@@ -142,3 +142,7 @@ function GaussJordan() {
 }
 
 export default GaussJordan;
+
+function GaussJordanCal() {
+    
+}
