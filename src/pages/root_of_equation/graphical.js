@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
 import { generateTable } from '../../functions/generateTable';
@@ -103,7 +103,7 @@ function Graphical() {
     }
     
     return(
-        <>
+        <Container>
             <Card as={Row} className="mb-3">
                 <Card.Header>Graphical Method</Card.Header>
                 <Card.Body>
@@ -123,11 +123,11 @@ function Graphical() {
                         <Button variant="primary" onClick={Calculator}>Calculate</Button>
                     </Form>
                 </Card.Body>
-                <Card.Footer><h5>Answer: {result}</h5></Card.Footer>
+                <Card.Footer>Answer: {result}</Card.Footer>
             </Card>
             {generatePlot(resultArr)}
             {generateTable(resultArr)}
-        </>
+        </Container>
     )
 }
 

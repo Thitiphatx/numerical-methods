@@ -19,13 +19,13 @@ export const methodsPath = [
                 id: "/onepoint",
             },
             {
-                label: "Taylor Series",
-                id: "/taylorseries",
-            },
-            {
                 label: "Newton Raphson",
                 id: "/newtonraphson",
-            }
+            },
+            {
+                label: "Secant Method",
+                id: "/secant"
+            },
         ]
     },
     {
@@ -38,10 +38,6 @@ export const methodsPath = [
             {
                 label: "Gauss Elimination",
                 id: "/gausselimination"
-            },
-            {
-                label: "Secant Method",
-                id: "/secant"
             },
             {
                 label: "Gauss Jordan",
@@ -70,11 +66,11 @@ export const methodsPath = [
         ]
     },
     {
-        title: "Inter and Extrapolation",
+        title: "Interpolation",
         path: [
             {
-                label: "Normal Interpolation",
-                id: "normalinter"
+                label: "Newton Divided Difference",
+                id: "newtondivided"
             },
             {
                 label: "Lagrange Interpolation",
@@ -92,7 +88,7 @@ export const methodsPath = [
             {
                 label: "Least Squares",
                 id: "leastsquares"
-            }
+            },
         ]
     }
 ]

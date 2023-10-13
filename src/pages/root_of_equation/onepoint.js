@@ -1,65 +1,113 @@
 import React from 'react';
-import { Card, Form, Button } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row } from 'react-bootstrap';
 import { evaluate } from 'mathjs';
+import { useState } from 'react';
+import { generateTable } from '../../functions/generateTable';
+import Plot from 'react-plotly.js';
+function Onepoint() {
 
-class Onepoint extends React.Component {
+    const [FX, setFX] = useState("");
+    const [xStart, setXStart] = useState(0);
+    const [result, setResult] = useState(0);
+    const [resultArr, setResultArr] = useState([]);
+    const [latestData, setLatestData] = useState(null);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            fx: "",
-            x: 0,
-            result: 0,
-        };
+    const inputFX = (event) => {
+        setFX(event.target.value);
+    }
+    const inputX = (event) => {
+        setXStart(event.target.value);
     }
 
-    inputFx = (event) => {
-        this.setState({
-            fx: event.target.value,
-        });
-    }
-
-    inputX = (event) => {
-        this.setState({
-            x: event.target.value,
-        });
-    }
-
-    calculator = () => {
+    const calculator = () => {
+        let iteration = 0;
+        let maxIteration = 100;
         let xOld;
-        let fx = this.state.fx;
-        let x = this.state.x;
+        let fx = FX;
+        let x = parseFloat(xStart);
+
+        const newArr = [];
         do {
+            iteration++;
             xOld = x;
             x = evaluate(fx, { x });
-        } while (!((Math.abs(x - xOld) / x) * 100 < 0.000001) && x != undefined);
-        
-        this.setState({
-            result: x,
-        });
+            newArr.push({
+                x: xOld,
+                fx: x
+            })
+        } while ((Math.abs(x - xOld) / x) * 100 >= 0.000001 && iteration < maxIteration && x != 0);
+        setLatestData({
+            equation: FX,
+            start: xStart
+        })
+        setResultArr(newArr);
+        setResult(xOld);
     }
 
-    render() {
-        return (
-            <Card>
-                <Card.Header>Onepoint Iteration</Card.Header>
-                <Card.Body>
-                    <Form>
-                        <Form.Group className="mb-3">
-                                <Form.Label>f(x)</Form.Label>
-                                <Form.Control type="text" onChange={this.inputFx} />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                                <Form.Label>x start</Form.Label>
-                                <Form.Control type="number" onChange={this.inputX} />
-                        </Form.Group>
-                        <Button variant="primary" onClick={this.calculator}>Calculate</Button>
-                    </Form>
-                </Card.Body>
-                <Card.Footer>Answer : {this.state.result}</Card.Footer>
-            </Card>
-        )
+    function generatePlot(arr) {
+        if (arr.length == 0) {
+            return null
+        }
+        else {
+            const Graph = [];
+            const step = 2*Math.abs(parseFloat(latestData.start)-arr.length) < 10 ? 0.1 : 1;
+            for (let i = parseFloat(latestData.start)-step; i < parseFloat(arr.length)+step; i++) {
+                Graph.push({
+                    x: i,
+                    fx: evaluate(latestData.equation, {x: i}),
+                })
+            }
+            return (
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Plot</Card.Header>
+                    <Card.Body className="text-center">
+                        <Plot 
+                            data={[
+                                {
+                                    x: Graph.map((point)=> (point.x)),
+                                    y: Graph.map((point)=> (point.fx)),
+                                    mode: "lines",
+                                    marker: {color: "blue"},
+                                    name: latestData.equation
+                                },
+                                {
+                                    x: arr.map((point)=> (point.x)),
+                                    y: arr.map((point)=> (point.fx)),
+                                    mode: "markers",
+                                    marker: {color: "red"},
+                                    name: "OnePoint"
+                                }
+                            ]}
+                        />
+                    </Card.Body>
+                </Card>
+            )
+        }
     }
+        return (
+            <Container>
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Onepoint Iteration</Card.Header>
+                    <Card.Body>
+                        <Form>
+                            <Form.Group className="mb-3">
+                                    <Form.Label>f(x)</Form.Label>
+                                    <Form.Control type="text" onChange={inputFX} />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                    <Form.Label>x start</Form.Label>
+                                    <Form.Control type="number" onChange={inputX} />
+                            </Form.Group>
+                            <Button variant="primary" onClick={calculator}>Calculate</Button>
+                        </Form>
+                    </Card.Body>
+                    <Card.Footer>Answer : {result}</Card.Footer>
+                </Card>
+                {generatePlot(resultArr)}
+                {generateTable(resultArr)}
+            </Container>
+            
+        )
 }
 
 export default Onepoint;

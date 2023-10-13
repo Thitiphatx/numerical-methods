@@ -15,6 +15,7 @@ export const generateTable = (resultArr)=> {
                                 <th>i</th>
                                 <th>x</th>
                                 <th>fx</th>
+                                <th>error</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,6 +24,7 @@ export const generateTable = (resultArr)=> {
                                     <td>{index+1}</td>
                                     <td>{iter.x}</td>
                                     <td>{iter.fx}</td>
+                                    <td>{Math.abs(0-iter.fx)}</td>
                                 </tr>
                             ))}
                         </tbody>

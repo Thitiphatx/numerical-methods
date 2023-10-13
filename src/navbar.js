@@ -10,7 +10,7 @@ import { methodsPath } from './path';
 
 function HomeNav() {
   return (
-      <Navbar expand="lg" className="bg-body-tertiary">
+      <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
         <Container>
           <Navbar.Brand href="/">
             <FontAwesomeIcon icon={faCalculator} /><span> Numerical methods</span>

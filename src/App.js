@@ -19,9 +19,9 @@ import NewtonRaphson from './pages/root_of_equation/newtonraphson';
 import Lagrange from './pages/Interpolation/lagrange.js';
 import Spline from './pages/Interpolation/Spline';
 import Secant from './pages/root_of_equation/secant';
-import GaussJordan from './pages/Matrix/gaussjordan';
-import GaussElimination from './pages/Matrix/gausselimination';
-import Cramer from './pages/Matrix/cramer';
+import GaussJordan from './pages/LinearAlgebra/gaussjordan';
+import GaussElimination from './pages/LinearAlgebra/gausselimination';
+import Cramer from './pages/LinearAlgebra/cramer';
 
 function App() {
   return (
@@ -38,11 +38,9 @@ function App() {
               <Route path="/falseposition" element={<FalsePosition />} />
               <Route path="/newtonraphson" element={<NewtonRaphson />} />
               <Route path="/secant" element={<Secant />} />
-
               <Route path="/cramerrule" element={<Cramer />}/>
               <Route path="/gausselimination" element={<GaussElimination />} />
               <Route path="/gaussjordan" element={<GaussJordan />} />
-
               <Route path="/lagrangeinter" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
             </Routes>
