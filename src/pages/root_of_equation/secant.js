@@ -1,29 +1,46 @@
 import React from "react";
 import { useState } from "react";
-import { Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form, Table } from "react-bootstrap";
 import { evaluate } from "mathjs";
+import Plot from "react-plotly.js";
 
 function Secant() {
     const [fx, setFx] = useState("");
     const [x0, setx0] = useState(0);
     const [x1, setx1] = useState(0);
     const [result, setResult] = useState(0);
+    const [resultArr, setResultArr] = useState([]);
+    const [latestData, setLatestData] = useState(null);
 
-    const Calculator = ()=> {
-        let local_x0 = x0;
-        let local_x1 = x1;
+    const calculator = ()=> {
+        let local_x0 = parseFloat(x0);
+        let local_x1 = parseFloat(x1);
         let x2, xOld, fx0, fx1;
 
+        const newArr = [];
         do {
             fx0 = evaluate(fx, {x:local_x0});
             fx1 = evaluate(fx, {x:local_x1});
             x2 = local_x0 - ( fx0 * (local_x0 - local_x1 ) ) / ( fx0 - fx1)
             xOld = local_x1;
-            
+            newArr.push(
+                {
+                    x0: local_x0,
+                    x1: local_x1,
+                    x2: x2,
+                }
+            )
             local_x0 = local_x1;
             local_x1 = x2;
+            
 
         } while((Math.abs(x2-xOld)/x2) * 100 >= 0.000001);
+        setLatestData({
+            equation: fx,
+            x0: x0,
+            x1: x1,
+        })
+        setResultArr(newArr);
         setResult(x2);
     }
 
@@ -37,31 +54,120 @@ function Secant() {
         setFx(event.target.value);
     }
 
+    function generatePlot(arr) {
+        if (arr.length === 0) {
+            return null;
+        } else {
+            const Graph = [];
+            for (let i = x0-1; i < x1+1; i++) {
+                Graph.push({
+                    x: i,
+                    fx: evaluate(latestData.equation, {x: i})
+                })
+            }
+            return (
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Plot</Card.Header>
+                    <Card.Body className="text-center">
+                        <Plot
+                            data={[
+                                {
+                                    x: Graph.map(point => point.x),
+                                    y: Graph.map(point => point.fx),
+                                    mode: "lines",
+                                    marker: { color: "blue" },
+                                    name: latestData.equation,
+                                },
+                                {
+                                    x: arr.map((point)=> (point.x2)),
+                                    y: arr.map((point)=> (evaluate(latestData.equation, {x: point.x2}))),
+                                    mode: "markers",
+                                    marker: {color: 'red'},
+                                    name: "Secant"
+                                },
+                            ]}
+                            layout={{
+                                yaxis: {
+                                    title: "f(x)",
+                                },
+                                xaxis: {
+                                    title: "x",
+                                },
+                            }}
+                        />
+                    </Card.Body>
+                </Card>
+            );
+        }
+    }
+    
+
+    function generateTable(resultArr) {
+        if (resultArr.length == 0) {
+            return null
+        }
+        else {
+            return (
+                <Card as={Row} className="mb-3">
+                    <Card.Header>Iteration Table</Card.Header>
+                    <Card.Body>
+                        <Table striped bordered>
+                            <thead>
+                                <tr>
+                                    <th>i</th>
+                                    <th>x0</th>
+                                    <th>x1</th>
+                                    <th>x2</th>
+                                    <th>error</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {resultArr.map((iter, index)=> (
+                                    <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{iter.x0}</td>
+                                        <td>{iter.x1}</td>
+                                        <td>{iter.x2}</td>
+                                        <td>{Math.abs(0-iter.x2)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </Card.Body>
+                </Card>
+            )
+        }
+    }
     return(
-        <Card>
-            <Card.Header>Secant Method</Card.Header>
-            <Card.Body>
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Label>f(x)</Form.Label>
-                        <Form.Control onChange={inputFx}></Form.Control>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Col>
-                            <Form.Label>x0</Form.Label>
-                            <Form.Control onChange={inputX0}></Form.Control>
-                        </Col>
-                        <Col>
-                            <Form.Label>x1</Form.Label>
-                            <Form.Control onChange={inputX1}></Form.Control>
-                        </Col>
-                        
-                    </Form.Group>
-                    <Button variant="primary" onClick={Calculator}>Calculate</Button>
-                </Form>
-            </Card.Body>
-            <Card.Footer>Answer : {result}</Card.Footer>
-        </Card>
+        <Container>
+            <Card as={Row} className="mb-3">
+                <Card.Header>Secant Method</Card.Header>
+                <Card.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>f(x)</Form.Label>
+                            <Form.Control onChange={inputFx}></Form.Control>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Col>
+                                <Form.Label>x0</Form.Label>
+                                <Form.Control onChange={inputX0}></Form.Control>
+                            </Col>
+                            <Col>
+                                <Form.Label>x1</Form.Label>
+                                <Form.Control onChange={inputX1}></Form.Control>
+                            </Col>
+                            
+                        </Form.Group>
+                        <Button variant="primary" onClick={calculator}>Calculate</Button>
+                    </Form>
+                </Card.Body>
+                <Card.Footer>Answer : {result}</Card.Footer>
+            </Card>
+            {generatePlot(resultArr)}
+            {generateTable(resultArr)}
+        </Container>
+        
     )
 }
 
