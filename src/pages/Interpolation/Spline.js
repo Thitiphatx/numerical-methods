@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, Row, Col, Form, Button, ButtonGroup, ToggleButton, ToggleButtonGroup, InputGroup } from "react-bootstrap";
 
 function Spline() {
-  // const [splineType, setSplineType] = useState("Linear");
+  const [splineType, setSplineType] = useState("Linear");
   const [points, setPoints] = useState([
     {
       x: 0,

@@ -49,8 +49,8 @@ function App() {
           </Container>
         </main>
       </div>
-      <footer className="text-center text-muted">
-        <div className="border-top pt-3">
+      <footer className="text-center text-muted bg-light">
+        <div className="pt-3">
           <p>KMUTNB, Numerical Methods</p>
           <p>Thitiphat Kunrong 6504062630081</p>
         </div>

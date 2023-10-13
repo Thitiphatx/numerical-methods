@@ -29,7 +29,7 @@ export const methodsPath = [
         ]
     },
     {
-        title: "Matrix",
+        title: "Linear Algebra",
         path: [
             {
                 label: "Cramer's Rule",
