@@ -57,7 +57,7 @@ function Graphical() {
         }
         else {
             const Graph = [];
-                for (let i = latestData.start-1; i < arr.length+1; i++) {
+                for (let i = parseFloat(latestData.start)-1; i < arr.length+1; i++) {
                     Graph.push({
                         x: i,
                         fx: evaluate(latestData.equation, {x: i}),
