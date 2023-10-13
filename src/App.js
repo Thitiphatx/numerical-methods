@@ -3,7 +3,7 @@ import './App.css';
 import HomeNav from './navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Card } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 // pages
 import Home from './pages/home';
