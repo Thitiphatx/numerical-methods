@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
 
-function MatrixInversion() {
+function LUDecomposition() {
     const [size, setSize] = useState(3);
     const [Amatrix, setAmatrix] = useState(
         [
@@ -16,7 +16,7 @@ function MatrixInversion() {
     const inputSize = (e) => {
         setSize(parseInt(e.target.value));
     };
-    
+
     const inputSetSize = () => {
         const newMatrix = [];
         const bMatrix = [];
@@ -45,63 +45,61 @@ function MatrixInversion() {
     };
 
     const calculator = () => {
-        const arr = JSON.parse(JSON.stringify(Amatrix));
-        const Identity = generateIdentityMatrix(size);
-        GaussJordan(arr, Identity);
-        
+        let LMatrix = [];
+        let UMatrix = [];
+        let YMatrix = new Array(size).fill(0);
+        let XMatrix = new Array(size).fill(0);
 
-        setResult(MatrixMultiply(Identity, Bmatrix));
-    };
-
-    const MatrixMultiply = (I, b)=> {
-        var results = [];
         for (let i = 0; i < size; i++) {
-            results[i] = 0;
-            for (let j = 0; j < size; j++) {
-                results[i] += parseFloat(I[i][j]) * parseFloat(b[j]);
-            }
+            LMatrix[i] = new Array(size).fill(0);
+            UMatrix[i] = new Array(size).fill(0);
         }
-        return results;
-    }
 
-    const GaussJordan = (matrix, Imatrix) => {
         for (let i = 0; i < size; i++) {
-            if (matrix[i][i] == 0) {
-                matrix[i][j] = 1e-15;
-            }
-            let fixed = matrix[i][i];
-
+            // finding U
             for (let j = 0; j < size; j++) {
-                Imatrix[i][j] /= fixed;
-                matrix[i][j] /= fixed;
-            }
-            for (let j = 0; j < size; j++) {
-                if (i == j) continue;
-                let factor = matrix[j][i];
+                let sum = 0;
                 for (let k = 0; k < size; k++) {
-                    Imatrix[j][k] -= factor * Imatrix[i][k];
-                    matrix[j][k] -= factor * matrix[i][k];
+                    sum += LMatrix[i][k] * UMatrix[k][j];
                 }
+                UMatrix[i][j] = Amatrix[i][j] - sum;
             }
-        }
-    }
 
-    const generateIdentityMatrix = (n) => {
-        const newMatrix = [];
-        for (let i = 0; i < n; i++) {
-            newMatrix[i] = [];
-            for (let j = 0; j < n; j++) {
-                if (i === j) newMatrix[i][j] = 1;
-                else newMatrix[i][j] = 0;
+            // finding L
+            for (let j = 0; j < size; j++) {
+                let sum = 0;
+                for (let k = 0; k < size; k++) {
+                    sum += LMatrix[j][k] * UMatrix[k][i];
+                }
+                LMatrix[j][i] = (Amatrix[j][i] - sum) / UMatrix[i][i];
             }
         }
-        return newMatrix;
+
+        // find Y from LY = B
+        for (let i = 0; i < size; i++) {
+            let sum = 0;
+            for (let j = 0; j < size; j++) {
+                sum += LMatrix[i][j] * YMatrix[j];
+            }
+            YMatrix[i] = (Bmatrix[i] - sum) / LMatrix[i][i];
+        }
+
+        // find X from UX = Y
+        for (let i = size - 1; i >= 0; i--) {
+            let sum = 0;
+            for (let j = i + 1; j < size; j++) {
+                sum += UMatrix[i][j] * XMatrix[j];
+            }
+            XMatrix[i] = (YMatrix[i] - sum) / UMatrix[i][i];
+        }
+
+        setResult(XMatrix);
     };
 
     return (
         <Container>
             <Card as={Row} className="mb-3">
-                <Card.Header>Matrix Inversion</Card.Header>
+                <Card.Header>LU Decomposition</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
@@ -146,7 +144,7 @@ function MatrixInversion() {
                 ))}
             </Card>
         </Container>
-    )
+    );
 }
 
-export default MatrixInversion;
+export default LUDecomposition;

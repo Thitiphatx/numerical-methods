@@ -19,10 +19,14 @@ import NewtonRaphson from './pages/root_of_equation/newtonraphson';
 import Lagrange from './pages/Interpolation/lagrange.js';
 import Spline from './pages/Interpolation/Spline';
 import Secant from './pages/root_of_equation/secant';
+
+
+// Linear algebra
+import Cramer from './pages/LinearAlgebra/cramer';
 import GaussJordan from './pages/LinearAlgebra/gaussjordan';
 import GaussElimination from './pages/LinearAlgebra/gausselimination';
-import Cramer from './pages/LinearAlgebra/cramer';
 import MatrixInversion from './pages/LinearAlgebra/matrixinversion';
+import LUDecomposition from './pages/LinearAlgebra/ludecomposition';
 
 function App() {
   return (
@@ -45,6 +49,7 @@ function App() {
               <Route path="/lagrangeinter" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
               <Route path="/matrixinversion" element={<MatrixInversion />} />
+              <Route path="/ludecomposition" element={<LUDecomposition />} />
             </Routes>
           </Container>
         </main>
