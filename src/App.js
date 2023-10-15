@@ -22,6 +22,7 @@ import Secant from './pages/root_of_equation/secant';
 import GaussJordan from './pages/LinearAlgebra/gaussjordan';
 import GaussElimination from './pages/LinearAlgebra/gausselimination';
 import Cramer from './pages/LinearAlgebra/cramer';
+import MatrixInversion from './pages/LinearAlgebra/matrixinversion';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
               <Route path="/gaussjordan" element={<GaussJordan />} />
               <Route path="/lagrangeinter" element={<Lagrange />} />
               <Route path="/spline" element={<Spline />} />
+              <Route path="/matrixinversion" element={<MatrixInversion />} />
             </Routes>
           </Container>
         </main>
