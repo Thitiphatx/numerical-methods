@@ -28,6 +28,9 @@ import GaussElimination from './pages/LinearAlgebra/gausselimination';
 import MatrixInversion from './pages/LinearAlgebra/matrixinversion';
 import LUDecomposition from './pages/LinearAlgebra/ludecomposition';
 
+// Integration
+import Simpson from './pages/Integration/simpson';
+
 function App() {
   return (
     <BrowserRouter>
@@ -50,6 +53,7 @@ function App() {
               <Route path="/spline" element={<Spline />} />
               <Route path="/matrixinversion" element={<MatrixInversion />} />
               <Route path="/ludecomposition" element={<LUDecomposition />} />
+              <Route path="/simpson" element={<Simpson />} />
             </Routes>
           </Container>
         </main>

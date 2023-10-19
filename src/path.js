@@ -70,15 +70,15 @@ export const methodsPath = [
         path: [
             {
                 label: "Newton Divided Difference",
-                id: "newtondivided"
+                id: "/newtondivided"
             },
             {
                 label: "Lagrange Interpolation",
-                id: "lagrangeinter"
+                id: "/lagrangeinter"
             },
             {
                 label: "Spline",
-                id: "spline"
+                id: "/spline"
             }
         ]
     },
@@ -87,7 +87,20 @@ export const methodsPath = [
         path: [
             {
                 label: "Least Squares",
-                id: "leastsquares"
+                id: "/leastsquares"
+            },
+        ]
+    },
+    {
+        title: "Integration",
+        path: [
+            {
+                label: "Trapezoidal",
+                id: "/trapezoidal",
+            },
+            {
+                label: "Simpson's rules",
+                id: "/simpson",
             },
         ]
     }
