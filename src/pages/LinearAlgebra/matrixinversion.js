@@ -67,7 +67,7 @@ function MatrixInversion() {
     const GaussJordan = (matrix, Imatrix) => {
         for (let i = 0; i < size; i++) {
             if (matrix[i][i] == 0) {
-                matrix[i][j] = 1e-15;
+                matrix[i][i] = 1e-15;
             }
             let fixed = matrix[i][i];
 

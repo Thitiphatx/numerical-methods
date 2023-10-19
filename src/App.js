@@ -30,6 +30,7 @@ import LUDecomposition from './pages/LinearAlgebra/ludecomposition';
 
 // Integration
 import Simpson from './pages/Integration/simpson';
+import Trapezoidal from './pages/Integration/Trapezoidal';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
               <Route path="/matrixinversion" element={<MatrixInversion />} />
               <Route path="/ludecomposition" element={<LUDecomposition />} />
               <Route path="/simpson" element={<Simpson />} />
+              <Route path="/trapezoidal" element={<Trapezoidal />} />
             </Routes>
           </Container>
         </main>
