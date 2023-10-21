@@ -1,15 +1,12 @@
 import React from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
-import { generateMatrix } from "./generateMatrix";
 
 function Jacobi() {
     const [matrixA, setMatrixA] = useState([[0,0,0],[0,0,0],[0,0,0]]);
     const [matrixB, setMatrixB] = useState([0,0,0]);
-    const [matrixX, setMatrixX] = useState([1,1,1]);
+    const [matrixX, setMatrixX] = useState([0,0,0]);
     const [size, setSize] = useState(3);
-
-    const [matrixResult, setMatrixResult] = useState([]);
 
     
     // input handler
@@ -41,7 +38,6 @@ function Jacobi() {
         let x = new Array(parseInt(size)).fill(0);
         let error = 0.001;
         let passCounter = 0;
-        let iteration = 0;
 
         while(passCounter < size) {
             for (let i = 0; i < size; i++) {
@@ -62,9 +58,8 @@ function Jacobi() {
                     passCounter++;
                 }
             }
-            iteration++;
         }
-        setMatrixResult(x);
+        setMatrixX(x);
     }
 
     return (
@@ -110,10 +105,10 @@ function Jacobi() {
                         <Button onClick={calculator}>Calculate</Button>
                     </Form>
                 </Card.Body>
-                {matrixResult.map((e, index)=> (
+                {matrixX.map((e, index)=> (
                     <Card.Footer>x{index} : {e} </Card.Footer>
                 ))}
-                
+
             </Card>
         </Container>
     )
