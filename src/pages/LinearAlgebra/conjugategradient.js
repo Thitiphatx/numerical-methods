@@ -17,7 +17,6 @@ function ConjugateGradient() {
         let SIZE = parseInt(size);
         setMatrixA(new Array(SIZE).fill().map(()=> new Array(SIZE).fill(0)));
         setMatrixB(new Array(SIZE).fill(0));
-
     }
     const changeMatrixA = (e, row, col)=> {
         const newMatrix = [...matrixA];
@@ -56,13 +55,6 @@ function ConjugateGradient() {
 
         function error(r) {
             return (Math.abs(dotProduct(r, r)) > 0)
-        }
-        function plus(p1, p2) {
-            let matrix_new = []
-            for (let i = 0; i < p1.length; i++) {
-                matrix_new += p2[i];
-            }
-            return matrix_new;
         }
         function subtract(m1, m2) {
             let m3 = [];

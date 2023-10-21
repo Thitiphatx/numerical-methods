@@ -34,6 +34,7 @@ import Trapezoidal from './pages/Integration/Trapezoidal';
 import Jacobi from './pages/LinearAlgebra/jacobi';
 import GaussSeidel from './pages/LinearAlgebra/gaussseidel';
 import ConjugateGradient from './pages/LinearAlgebra/conjugategradient';
+import NewtonDivided from './pages/Interpolation/newtondivided';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
               <Route path="/jacobiiteration" element={<Jacobi />} />
               <Route path="/gaussseideliteration" element={<GaussSeidel />} />
               <Route path="/conjugategradient" element={<ConjugateGradient />} />
+              <Route path="/newtondivided" element={<NewtonDivided />} />
             </Routes>
           </Container>
         </main>
