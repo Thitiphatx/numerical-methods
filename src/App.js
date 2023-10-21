@@ -32,6 +32,8 @@ import LUDecomposition from './pages/LinearAlgebra/ludecomposition';
 import Simpson from './pages/Integration/simpson';
 import Trapezoidal from './pages/Integration/Trapezoidal';
 import Jacobi from './pages/LinearAlgebra/jacobi';
+import GaussSeidel from './pages/LinearAlgebra/gaussseidel';
+import ConjugateGradient from './pages/LinearAlgebra/conjugategradient';
 
 function App() {
   return (
@@ -58,6 +60,8 @@ function App() {
               <Route path="/simpson" element={<Simpson />} />
               <Route path="/trapezoidal" element={<Trapezoidal />} />
               <Route path="/jacobiiteration" element={<Jacobi />} />
+              <Route path="/gaussseideliteration" element={<GaussSeidel />} />
+              <Route path="/conjugategradient" element={<ConjugateGradient />} />
             </Routes>
           </Container>
         </main>
