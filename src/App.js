@@ -31,6 +31,7 @@ import LUDecomposition from './pages/LinearAlgebra/ludecomposition';
 // Integration
 import Simpson from './pages/Integration/simpson';
 import Trapezoidal from './pages/Integration/Trapezoidal';
+import Jacobi from './pages/LinearAlgebra/jacobi';
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
               <Route path="/ludecomposition" element={<LUDecomposition />} />
               <Route path="/simpson" element={<Simpson />} />
               <Route path="/trapezoidal" element={<Trapezoidal />} />
+              <Route path="/jacobiiteration" element={<Jacobi />} />
             </Routes>
           </Container>
         </main>
