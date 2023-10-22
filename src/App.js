@@ -35,6 +35,8 @@ import Jacobi from './pages/LinearAlgebra/jacobi';
 import GaussSeidel from './pages/LinearAlgebra/gaussseidel';
 import ConjugateGradient from './pages/LinearAlgebra/conjugategradient';
 import NewtonDivided from './pages/Interpolation/newtondivided';
+import LinearLeastSquares from './pages/Regression/linearleastsquares';
+import PolyLeastSquares from './pages/Regression/polynomialleastsquares';
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
               <Route path="/gaussseideliteration" element={<GaussSeidel />} />
               <Route path="/conjugategradient" element={<ConjugateGradient />} />
               <Route path="/newtondivided" element={<NewtonDivided />} />
+              <Route path="/linearleastsquares" element={<LinearLeastSquares />} />
+              <Route path="/polyleastsquares" element={<PolyLeastSquares />} />
             </Routes>
           </Container>
         </main>

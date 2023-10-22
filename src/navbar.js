@@ -26,8 +26,6 @@ function HomeNav() {
                     ))}
                   </NavDropdown>
                 ))}
-
-                
             </Nav>
           </Navbar.Collapse>
         </Container>

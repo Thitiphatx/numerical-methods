@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button, Form, Card, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 
-function Lagrange() {
+function LinearLeastSquares() {
     const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
     const [targetX, setTargetX] = useState(0);
     const [size, setSize] = useState(3);
@@ -29,14 +29,16 @@ function Lagrange() {
         }
         setArrayPoints(newArr);
     }
-    const inputX = (e, index)=> {
+    const inputX = (e, index) => {
         const newArr = [...arrayPoints];
         newArr[index].x = e.target.value;
-    }
-    const inputY = (e, index)=> {
+        setArrayPoints(newArr);
+    };
+    const inputY = (e, index) => {
         const newArr = [...arrayPoints];
         newArr[index].y = e.target.value;
-    }
+        setArrayPoints(newArr);
+    };
     const inputTargetX = (e)=> {
         setTargetX(e.target.value);
     }
@@ -45,24 +47,25 @@ function Lagrange() {
     const calculator = () => {
         const x = arrayPoints.map((e)=> (parseFloat(e.x)));
         const y = arrayPoints.map((e)=> (parseFloat(e.y)));
-        let resultX = 0;
-        let X = targetX;
+        const xTarget = parseFloat(targetX);
+        let matrix = new Array(2).fill(new Array(2).fill(0));
+        let answer = new Array(2).fill(0);
 
-        for (let i = 0; i < x.length; i++) {
-            let L = 1;
-            for (let j = 0; j < x.length; j++) {
-                if (i === j) continue;
-                L *= (x[j] - X) / (x[j] - x[i]);
-            }
-            resultX += y[i]*L;
+        for (let i = 0; i < size; i++) {
+            matrix[0][1] += x[i];
+            matrix[1][0] += x[i];
+            matrix[1][1] += Math.pow(x[i],2);
+
+            answer[0] += y[i];
+            answer[1] += x[i]*y[i];
         }
 
-        setResult(resultX);
+        setResult(A[0]+xTarget*A[1]);
     }
         return(
             <Container>
             <Card>
-                <Card.Header>Lagrange</Card.Header>
+                <Card.Header>Linear Regression</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
@@ -108,4 +111,4 @@ function Lagrange() {
         )
 }
 
-export default Lagrange;
+export default LinearLeastSquares;

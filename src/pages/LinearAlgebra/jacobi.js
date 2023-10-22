@@ -64,12 +64,13 @@ function Jacobi() {
 
     return (
         <Container>
-            <Card>
+            <Card as={Row} className="mb-3">
                 <Card.Header>Jacobi Iteration</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
                             <Col xs={3}>
+                                <Form.Label>Matrix size</Form.Label>
                                 <InputGroup>
                                     <Form.Control type="number" value={size} onChange={inputSize}></Form.Control>
                                     <Button variant="secondary" onClick={setMatrixSize}>Set</Button>
@@ -78,6 +79,7 @@ function Jacobi() {
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Col>
+                                <Form.Label>A</Form.Label>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         {row.map((col, colIndex)=> (
@@ -87,6 +89,7 @@ function Jacobi() {
                                 ))}
                             </Col>
                             <Col xs={1}>
+                                <Form.Label>X</Form.Label>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         <Form.Control value={"x"+rowIndex} disabled></Form.Control>
@@ -94,6 +97,7 @@ function Jacobi() {
                                 ))}
                             </Col>
                             <Col xs={1}>
+                                <Form.Label>B</Form.Label>
                                 {matrixB.map((row, index)=> (
                                     <InputGroup key={index}>
                                         <Form.Control value={matrixB[index]} onChange={(e)=> changeMatrixB(e, index)}></Form.Control>

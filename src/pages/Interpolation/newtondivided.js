@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-boots
 import { useState } from "react";
 
 function NewtonDivided() {
-    const [arrayPoints, setArrayPoints] = useState([]);
+    const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
     const [targetX, setTargetX] = useState(0);
     const [size, setSize] = useState(3);
 
@@ -32,10 +32,12 @@ function NewtonDivided() {
     const inputX = (e, index)=> {
         const newArr = [...arrayPoints];
         newArr[index].x = e.target.value;
+        setArrayPoints(newArr);
     }
     const inputY = (e, index)=> {
         const newArr = [...arrayPoints];
         newArr[index].y = e.target.value;
+        setArrayPoints(newArr);
     }
     const inputTargetX = (e)=> {
         setTargetX(e.target.value);
@@ -66,8 +68,8 @@ function NewtonDivided() {
             return result;
         }
 
-        let x = arrayPoints.map((e, index)=> (parseFloat(e.x)));
-        let y = arrayPoints.map((e, index)=> (parseFloat(e.y)));
+        let x = arrayPoints.map((e)=> (parseFloat(e.x)));
+        let y = arrayPoints.map((e)=> (parseFloat(e.y)));
 
         setResult(getF(targetX));
     }

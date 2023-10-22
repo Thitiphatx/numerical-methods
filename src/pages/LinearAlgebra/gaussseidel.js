@@ -70,6 +70,7 @@ function GaussSeidel() {
                     <Form>
                         <Form.Group as={Row} className="mb-3">
                             <Col xs={3}>
+                                <Form.Label>A</Form.Label>
                                 <InputGroup>
                                     <Form.Control type="number" value={size} onChange={inputSize}></Form.Control>
                                     <Button variant="secondary" onClick={setMatrixSize}>Set</Button>
@@ -78,6 +79,7 @@ function GaussSeidel() {
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Col>
+                                <Form.Label>X</Form.Label>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         {row.map((col, colIndex)=> (
@@ -87,6 +89,7 @@ function GaussSeidel() {
                                 ))}
                             </Col>
                             <Col xs={1}>
+                                <Form.Label>B</Form.Label>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         <Form.Control value={"x"+rowIndex} disabled></Form.Control>

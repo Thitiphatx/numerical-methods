@@ -83,11 +83,19 @@ export const methodsPath = [
         ]
     },
     {
-        title: "Regression",
+        title: "Least Squares",
         path: [
             {
-                label: "Least Squares",
-                id: "/leastsquares"
+                label: "Linear Regression",
+                id: "/linearleastsquares"
+            },
+            {
+                label: "Polynomial Regression",
+                id: "/polyleastsquares"
+            },
+            {
+                label: "Multiple Regression",
+                id: "/multipleleastsquares"
             },
         ]
     },
@@ -102,6 +110,19 @@ export const methodsPath = [
                 label: "Simpson's rules",
                 id: "/simpson",
             },
+        ]
+    },
+    {
+        title: "Differentation",
+        path: [
+            {
+                label: "Ordinary Differential",
+                id: "/ordinary"
+            },
+            {
+                label: "Second Divided differences",
+                id: "/seconddivided"
+            }
         ]
     }
 ]
