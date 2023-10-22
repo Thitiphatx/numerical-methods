@@ -95,7 +95,7 @@ export const methodsPath = [
             },
             {
                 label: "Multiple Regression",
-                id: "/multipleleastsquares"
+                id: "/multileastsquares"
             },
         ]
     },
