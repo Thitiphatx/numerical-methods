@@ -9,7 +9,7 @@ function ConjugateGradient() {
     const [matrixX, setMatrixX] = useState([0,0,0]);
     const [size, setSize] = useState(3);
 
-    const [resultArray, setResultArray] = useState([]);
+    // const [resultArray, setResultArray] = useState([]);
 
     
     // input handler
