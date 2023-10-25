@@ -113,27 +113,29 @@ function LUDecomposition() {
                         </Form.Group>
 
                         <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>A</Form.Label>
-                                {Amatrix.map((rowCell, rowIndex) => (
-                                    <InputGroup key={rowIndex}>
-                                        {rowCell.map((colCell, colIndex) => (
-                                            <Form.Control key={colIndex} value={Amatrix[rowIndex][colIndex]} onChange={(e) => inputMatrix(e, rowIndex, colIndex)}></Form.Control>
-                                        ))}
-                                    </InputGroup>
-                                ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>X</Form.Label>
-                                {Amatrix.map((row, index) => (
-                                    <Form.Control className="text-center" key={index} value={`x${index}`} disabled></Form.Control>
-                                ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>B</Form.Label>
-                                {Bmatrix.map((row, index) => (
-                                    <Form.Control className="text-center" key={index} value={Bmatrix[index]} onChange={(e) => inputB(e, index)}></Form.Control>
-                                ))}
+                            <Col className="d-flex justify-content-center">
+                                <div className="mx-3 text-center">
+                                    <h4>A</h4>
+                                    {Amatrix.map((rowCell, rowIndex) => (
+                                        <InputGroup key={rowIndex}>
+                                            {rowCell.map((colCell, colIndex) => (
+                                                <Form.Control className="text-center matrix-field" key={colIndex} value={Amatrix[rowIndex][colIndex]} onChange={(e) => inputMatrix(e, rowIndex, colIndex)}></Form.Control>
+                                            ))}
+                                        </InputGroup>
+                                    ))}
+                                </div>
+                                <div className="mx-3 text-center">
+                                    <h4>X</h4>
+                                    {Amatrix.map((row, index) => (
+                                        <Form.Control className="text-center matrix-field" key={index} value={`x${index}`} disabled></Form.Control>
+                                    ))}
+                                </div>
+                                <div className="mx-3 text-center">
+                                    <h4>B</h4>
+                                    {Bmatrix.map((row, index) => (
+                                        <Form.Control className="text-center matrix-field" key={index} value={Bmatrix[index]} onChange={(e) => inputB(e, index)}></Form.Control>
+                                    ))}
+                                </div>  
                             </Col>
                         </Form.Group>
                         <Button onClick={calculator}>Calculate</Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Button, Form, Card, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
-import { GaussJordanFunction } from '../../functions/gaussJordan';
+import { GaussJordanReplace } from '../../functions/gaussJordan';
 
 function PolyLeastSquares() {
     const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
@@ -91,14 +91,15 @@ function PolyLeastSquares() {
             return result;
         }
 
-
+        
         function f(x) {
-            let A = GaussJordanFunction(arr, answer);
+            let A = GaussJordanReplace(arr, answer);
             let result = A[0];
             
             for (let i = 1; i < A.length; i++) {
                 result += A[i]*Math.pow(x, i);
             }
+            console.log(A);
             return result;
         }
         setResult(f(xTarget));

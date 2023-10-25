@@ -104,31 +104,34 @@ function GaussElimination() {
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>A</Form.Label>
-                                {matrix.map((row, rowIndex)=> (
-                                    <InputGroup key={rowIndex}>
-                                        {matrix[rowIndex].map((col, colIndex)=> (
-                                            <Form.Control key={colIndex} value={matrix[rowIndex][colIndex]} onChange={(e)=> changeMatrix(e, rowIndex, colIndex)}></Form.Control>
-                                        ))}
-                                    </InputGroup>
-                                ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>x</Form.Label>
-                                {matrix.map((row, rowIndex)=> (
-                                    <Form.Group key={rowIndex}>
-                                        <Form.Control className="text-center" value={`x${rowIndex}`} disabled></Form.Control>
-                                    </Form.Group>
-                                ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>b</Form.Label>
-                                {b.map((row, index)=> (
-                                    <Form.Group key={index}>
-                                        <Form.Control className="text-center" value={b[index]} onChange={(e)=> inputB(e, index)}></Form.Control>
-                                    </Form.Group>
-                                ))}
+                            <Col className="d-flex justify-content-center">
+                                <div className="mx-3 text-center">
+                                    <h4>A</h4>
+                                    {matrix.map((row, rowIndex)=> (
+                                        <InputGroup key={rowIndex}>
+                                            {matrix[rowIndex].map((col, colIndex)=> (
+                                                <Form.Control className="text-center matrix-field" key={colIndex} value={matrix[rowIndex][colIndex]} onChange={(e)=> changeMatrix(e, rowIndex, colIndex)}></Form.Control>
+                                            ))}
+                                        </InputGroup>
+                                    ))}
+                                </div>
+                                <div className="mx-3 text-center">
+                                    <h4>x</h4>
+                                    {matrix.map((row, rowIndex)=> (
+                                        <Form.Group key={rowIndex}>
+                                            <Form.Control className="text-center matrix-field" value={`x${rowIndex}`} disabled></Form.Control>
+                                        </Form.Group>
+                                    ))}
+                                </div>
+                                <div className="mx-3 text-center">
+                                    <h4>b</h4>
+                                    {b.map((row, index)=> (
+                                        <Form.Group key={index}>
+                                            <Form.Control className="text-center matrix-field" value={b[index]} onChange={(e)=> inputB(e, index)}></Form.Control>
+                                        </Form.Group>
+                                    ))}
+                                </div>
+                                
                             </Col>
                             
                         </Form.Group>

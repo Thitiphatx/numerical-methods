@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
+import Plot from "react-plotly.js";
 import { useState } from "react";
 
 function ConjugateGradient() {
@@ -7,6 +8,8 @@ function ConjugateGradient() {
     const [matrixB, setMatrixB] = useState([0,0,0]);
     const [matrixX, setMatrixX] = useState([0,0,0]);
     const [size, setSize] = useState(3);
+
+    const [resultArray, setResultArray] = useState([]);
 
     
     // input handler
@@ -38,7 +41,7 @@ function ConjugateGradient() {
 
         let R = subtract(multiply(A,x),B);
         let D = multiply(R, -1);
-
+        const xArray = [];
         while (error(R)) {
             let lambda = -1*dotProduct(D, R)/dotProduct(D,multiply(A, D));
             for (let i = 0; i < x.length; i++) {
@@ -50,7 +53,11 @@ function ConjugateGradient() {
             for (let i = 0; i < x.length; i++) {
                 D[i] = -1*R[i]+alpha*D[i];
             }
+            xArray.push(x);
+            console.log(x)
         };
+        
+        setResultArray(xArray);
         setMatrixX(x);
 
         function error(r) {
@@ -105,13 +112,12 @@ function ConjugateGradient() {
 
     return (
         <Container>
-            <Card>
+            <Card as={Row} className="mb-3">
                 <Card.Header>Conjugate Gradient</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
                             <Col xs={3}>
-                                <Form.Label>A</Form.Label>
                                 <InputGroup>
                                     <Form.Control type="number" value={size} onChange={inputSize}></Form.Control>
                                     <Button variant="secondary" onClick={setMatrixSize}>Set</Button>
@@ -119,30 +125,34 @@ function ConjugateGradient() {
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>X</Form.Label>
+                            <Col className="d-flex justify-content-center">
+                                <div className="mx-3 text-center">
+                                <h4>A</h4>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         {row.map((col, colIndex)=> (
-                                            <Form.Control key={colIndex} value={matrixA[rowIndex][colIndex]} onChange={(e)=> {changeMatrixA(e, rowIndex, colIndex)}}></Form.Control>
+                                            <Form.Control className="text-center matrix-field" key={colIndex} value={matrixA[rowIndex][colIndex]} onChange={(e)=> {changeMatrixA(e, rowIndex, colIndex)}}></Form.Control>
                                         ))}
                                     </InputGroup>
                                 ))}
-                            </Col>
-                            <Col xs={1}>
+                                </div>
+                                <div className="mx-3 text-center">
+                                <h4>X</h4>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
-                                        <Form.Control value={"x"+rowIndex} disabled></Form.Control>
+                                        <Form.Control className="text-center matrix-field" value={"x"+rowIndex} disabled></Form.Control>
                                     </InputGroup>
                                 ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>B</Form.Label>
+                                </div>
+                                <div className="mx-3 text-center">
+                                <h4>B</h4>
                                 {matrixB.map((row, index)=> (
                                     <InputGroup key={index}>
-                                        <Form.Control value={matrixB[index]} onChange={(e)=> changeMatrixB(e, index)}></Form.Control>
+                                        <Form.Control className="text-center matrix-field" value={matrixB[index]} onChange={(e)=> changeMatrixB(e, index)}></Form.Control>
                                     </InputGroup>
-                                ))}
+                                ))}  
+                                </div>
+                                
                             </Col>
                         </Form.Group>
                         
@@ -153,6 +163,34 @@ function ConjugateGradient() {
                     <Card.Footer>x{index} : {e} </Card.Footer>
                 ))}
 
+            </Card>
+            <Card as={Row} className="mb-3">
+                <Card.Header>Plot</Card.Header>
+                <Card.Body>
+                    <Plot 
+                        data={[
+                            {
+                                type: 'contour',
+                                x: [1,2,3],
+                                y: [1,2,3],
+                                z: [1,2,3],
+                                colorscale: 'Viridis',
+                            },
+                            
+                        ]}
+                        layout={
+                            {
+                                xaxis: {
+                                    title: "x"
+                                },
+                                yaxis: {
+                                    title: "f(x)"
+                                }
+                            }
+                        }
+                    />
+                </Card.Body>
+                <Card.Footer></Card.Footer>
             </Card>
         </Container>
     )

@@ -1,4 +1,4 @@
-export function GaussJordanFunction(arr, answer) {
+export function GaussJordanSwap(arr, answer) {
     let size = arr.length;
 
     for (let i = 0; i < size; i++) {
@@ -42,3 +42,29 @@ export function GaussJordanFunction(arr, answer) {
     }
     return answer;
 }
+
+export function GaussJordanReplace(arr, answer) {
+    let size = arr.length;
+
+    for (let i = 0; i < size; i++) {
+        if (arr[i][i] == 0) {
+            arr[i][i] = 1e-9;
+        }
+        let fixed = arr[i][i];
+        for (let j = i; j < size; j++) {
+            arr[i][j] /= fixed;
+        }
+        answer[i] /= fixed;
+
+        for (let j = 0; j < size; j++) {
+            if (i === j) continue;
+            let factor = arr[j][i];
+            for (let k = i; k < size; k++) {
+                arr[j][k] -= factor * arr[i][k];
+            }
+            answer[j] -= factor * answer[i];
+        }
+    }
+    return answer;
+}
+

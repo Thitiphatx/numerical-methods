@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Form, Card, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { GaussJordanReplace } from "../../functions/gaussJordan";
 
 export default function MultipleLeastSquares() {
     const [arrayX, setArrayX] = useState([[0,1,2]])
@@ -62,10 +63,9 @@ export default function MultipleLeastSquares() {
         let y = arrayY.map((data)=> parseFloat(data));
         let m = x.length;
 
-        let arr = new Array(m+1).fill(new Array(m+1).fill(0));
+        const arr = Array.from({ length: m+1 }, () => Array(m+1).fill(0));
         let answer = []
-
-        arr[0][0] = y.length;
+        arr[0][0] = arrayX[0].length;
 
         for (let i = 1; i < m+1; i++) {
             let sumX = 0;
@@ -101,43 +101,17 @@ export default function MultipleLeastSquares() {
             }
             answer[i] = sumXY;
         }
-        function GaussJordan(arr, answer) {
-            let size = arr.length;
-        
-            for (let i = 0; i < size; i++) {
-                if (arr[i][i] == 0) {
-                    arr[i][i] = 1e-15;
-                }
-                let fixed = arr[i][i];
-        
-                for (let j = i; j < size; j++) {
-                    arr[i][j] /= fixed;
-                }
-                answer[i] /= fixed;
-        
-                for (let j = 0; j < size; j++) {
-                    if (i === j) continue;
-                    let factor = arr[j][i];
-                    for (let k = i; k < size; k++) {
-                        arr[j][k] -= factor * arr[i][k];
-                    }
-                    answer[j] -= factor * answer[i];
-                }
-            }
-            return answer;
-        }
         function f(x) {
-            let A = GaussJordan(arr, answer);
+            let A = GaussJordanReplace(arr, answer);
             let resultX = A[0];
 
             for (let i = 1; i < A.length; i++) {
                 resultX += A[i]*Math.pow(x,i);
             }
-            console.log(A);
+            console.log(A)
             return resultX;
         }
         setResult(f(parseFloat(targetX)))
-
     }
 
     return (
@@ -147,32 +121,31 @@ export default function MultipleLeastSquares() {
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
-                            <Col xs={2}>
-                                <InputGroup>
-                                    <Button variant="secondary" onClick={addX}>Add x</Button>
-                                    <Button variant="outline-danger" onClick={removeX}>Remove x</Button>
-                                </InputGroup>
-                            </Col>
                             <Col>
+                                <InputGroup className="mb-2">
+                                    <Button onClick={addX} className="w-50">Add x</Button>
+                                    <Button variant="outline-danger" onClick={removeX} className="w-50">Remove x</Button>
+                                </InputGroup>
                                 <InputGroup>
-                                    <Button variant="secondary" onClick={addRow}>Add row</Button>
-                                    <Button variant="outline-danger" onClick={removeRow}>Remove row</Button>
+                                    <Button onClick={addRow} className="w-50">Add row</Button>
+                                    <Button variant="outline-danger" onClick={removeRow} className="w-50">Remove row</Button>
                                 </InputGroup>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             {arrayX.map((dataSet, index)=> (
                                 <Col key={index} sm="1">
-                                    <Form.Control value={"x"+index} className="text-center" disabled></Form.Control>
+                                    <div className="text-center">{"x"+index}</div>
                                     {dataSet.map((data, idx)=> (
-                                        <Form.Control key={idx} value={data} className="text-center" onChange={(e)=> inputX(e, index, idx)}></Form.Control>
+                                        <Form.Control key={idx} value={data} className="text-center matrix-field" onChange={(e)=> inputX(e, index, idx)}></Form.Control>
                                     ))}
                                 </Col>
                             ))}
+                            
                             <Col sm="1">
-                                <Form.Control value={"y"} className="text-center" disabled></Form.Control>
+                            <div className="text-center">y</div>
                                 {arrayY.map((e, index)=> (
-                                    <Form.Control key={index} value={e} onChange={(e)=> inputY(e, index)} className="text-center"></Form.Control>
+                                    <Form.Control key={index} value={e} onChange={(e)=> inputY(e, index)} className="text-center matrix-field"></Form.Control>
                                 ))}
                             
                             </Col>

@@ -78,31 +78,33 @@ function Jacobi() {
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Col>
-                                <Form.Label>A</Form.Label>
+                            <Col className="d-flex justify-content-center">
+                                <div className="mx-3 text-center">
+                                <h4>A</h4>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
                                         {row.map((col, colIndex)=> (
-                                            <Form.Control key={colIndex} value={matrixA[rowIndex][colIndex]} onChange={(e)=> {changeMatrixA(e, rowIndex, colIndex)}}></Form.Control>
+                                            <Form.Control className="text-center matrix-field" key={colIndex} value={matrixA[rowIndex][colIndex]} onChange={(e)=> {changeMatrixA(e, rowIndex, colIndex)}}></Form.Control>
                                         ))}
                                     </InputGroup>
                                 ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>X</Form.Label>
+                                </div>
+                                <div className="mx-3 text-center">
+                                <h4>X</h4>
                                 {matrixA.map((row, rowIndex)=> (
                                     <InputGroup key={rowIndex}>
-                                        <Form.Control value={"x"+rowIndex} disabled></Form.Control>
+                                        <Form.Control className="text-center matrix-field" value={"x"+rowIndex} disabled></Form.Control>
                                     </InputGroup>
                                 ))}
-                            </Col>
-                            <Col xs={1}>
-                                <Form.Label>B</Form.Label>
+                                </div>
+                                <div className="mx-3 text-center">
+                                <h4>B</h4>
                                 {matrixB.map((row, index)=> (
                                     <InputGroup key={index}>
-                                        <Form.Control value={matrixB[index]} onChange={(e)=> changeMatrixB(e, index)}></Form.Control>
+                                        <Form.Control className="text-center matrix-field" value={matrixB[index]} onChange={(e)=> changeMatrixB(e, index)}></Form.Control>
                                     </InputGroup>
                                 ))}
+                                </div>
                             </Col>
                         </Form.Group>
                         

@@ -6,3 +6,10 @@
 main {
     margin-top: 1rem;
 }
+
+.matrix-field {
+    aspect-ratio: 1/1;
+}
+.matrixA {
+    max-width: 40rem;
+}
