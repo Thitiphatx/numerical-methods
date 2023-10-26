@@ -23,7 +23,7 @@ function NewtonRaphson() {
             x = xOld - evaluate(FX, {x: xOld}) / derivative(FX, 'x').evaluate({x: xOld});
             newArr.push({
                 x: xOld,
-                fx: x
+                y: x
             })
         } while((Math.abs(x-xOld)/x) * 100 >= 0.000001 && iteration < maxIteration);
 
@@ -53,7 +53,7 @@ function NewtonRaphson() {
                 Graph.push(
                     {
                         x: i,
-                        fx: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(latestData.equation, {x: i}),
                     }
                 )
             }
@@ -65,14 +65,14 @@ function NewtonRaphson() {
                             data={[
                                 {
                                     x: Graph.map((point)=> (point.x)),
-                                    y: Graph.map((point)=> (point.fx)),
+                                    y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
                                     name: latestData.equation,
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
-                                    y: arr.map((point)=> (point.fx)),
+                                    y: arr.map((point)=> (point.y)),
                                     mode: "markers",
                                     marker: {color: 'red'},
                                     name: "False Position"

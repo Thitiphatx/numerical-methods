@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { GaussJordanSwap } from "../../functions/gaussJordan";
 
 function GaussJordan() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
@@ -44,46 +45,7 @@ function GaussJordan() {
     const calculator = ()=> {
         let arr = JSON.parse(JSON.stringify(matrix));;
         let answer = [...b];
-
-        for (let i = 0; i < size; i++) {
-            let fixed = arr[i][i];
-        
-            if (fixed === 0) {
-                let swapped = false;
-                for (let j = i + 1; j < size; j++) {
-                    if (arr[j][i] !== 0) {
-                        swapRows(arr, i, j);
-                        swapRows(answer, i, j);
-                        swapped = true;
-                        break;
-                    }
-                }
-                if (!swapped) {
-                    return null;
-                }
-                fixed = arr[i][i];
-            }
-        
-            for (let j = i; j < size; j++) {
-                arr[i][j] /= fixed;
-            }
-            answer[i] /= fixed;
-        
-            for (let j = 0; j < size; j++) {
-                if (i === j) continue;
-                let factor = arr[j][i];
-                for (let k = i; k < size; k++) {
-                    arr[j][k] -= factor * arr[i][k];
-                }
-                answer[j] -= factor * answer[i];
-            }
-        }
-        
-        function swapRows(arr, row1, row2) {
-            const temp = arr[row1];
-            arr[row1] = arr[row2];
-            arr[row2] = temp;
-        }
+        GaussJordanSwap(arr, answer);
         setResult(answer);
     }
 

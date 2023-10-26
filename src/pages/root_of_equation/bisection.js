@@ -48,7 +48,7 @@ const Bisection =()=>{
             fXm = evaluate(FX, {x: Xm});
             newResultArr.push({
                 x: Xm.toPrecision(7),
-                fx: fXm.toPrecision(7),
+                y: fXm.toPrecision(7),
             })
         }
         setResultArr(newResultArr);
@@ -72,7 +72,7 @@ const Bisection =()=>{
                     const fx = evaluate(latestData.equation, {x: i})
                     Graph.push({
                         x,
-                        fx,
+                        y: fx,
                     })
                 }
                 catch (e) {
@@ -87,14 +87,14 @@ const Bisection =()=>{
                             data={[
                                 {
                                     x: Graph.map((point)=> (point.x)),
-                                    y: Graph.map((point)=> (point.fx)),
+                                    y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
                                     name: latestData.equation
                                 },
                                 {
                                     x: arr.map((point) => (point.x)),
-                                    y: arr.map((point) => (point.fx)),
+                                    y: arr.map((point) => (point.y)),
                                     mode: "markers",
                                     marker: {color: 'red'},
                                     name: "Bisection"

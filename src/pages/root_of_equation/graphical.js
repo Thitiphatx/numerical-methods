@@ -9,7 +9,6 @@ function Graphical() {
     const [fx, setfx] = useState("");
     const [xStart, setXstart] = useState(0);
     const [result, setResult] = useState(0);
-
     const [resultArr, setResultArr] = useState([]);
     const [latestData, setLatestData] = useState(null);
 
@@ -35,7 +34,7 @@ function Graphical() {
                 y1 = y2;
                 newArr.push({
                     x: x,
-                    fx: y1,
+                    y: y1,
                 })
             }
             else {
@@ -60,7 +59,7 @@ function Graphical() {
                 for (let i = parseFloat(latestData.start)-1; i < arr.length+1; i++) {
                     Graph.push({
                         x: i,
-                        fx: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(latestData.equation, {x: i}),
                     });
                 }
             return (
@@ -71,14 +70,14 @@ function Graphical() {
                             data={[
                                 {
                                     x: Graph.map((point)=> (point.x)),
-                                    y: Graph.map((point)=> (point.fx)),
+                                    y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
                                     name: latestData.equation,
                                 },
                                 {
                                     x: resultArr.map((point)=> (point.x)),
-                                    y: resultArr.map((point)=> (point.fx)),
+                                    y: resultArr.map((point)=> (point.y)),
                                     mode: "markers",
                                     marker: {color: 'red'},
                                     name: "Graphical",

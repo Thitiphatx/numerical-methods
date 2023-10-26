@@ -27,10 +27,11 @@ function Trapezoidal() {
         let a = parseFloat(start);
         let b = parseFloat(end);
         let h;
-        let x = a;
+        let x0 = a;
         const arrayF = [];
-        h = (b-a)/n*2;
-        x = a;
+        h = (b-a)/n;
+        let iteration = 0;
+        x = x0+iteration*h;
         while(x <= b) {
             arrayF.push(f(x));
             x += h;
@@ -44,7 +45,7 @@ function Trapezoidal() {
                 I += 2*arrayF[j]; 
             }
         }
-        I *= h/3;
+        I *= h/2;
         setResult(I);
         function f(x) {
             return evaluate(FX, {x});

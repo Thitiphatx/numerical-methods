@@ -23,8 +23,8 @@ export const generateTable = (resultArr)=> {
                                 <tr key={index}>
                                     <td>{index+1}</td>
                                     <td>{iter.x}</td>
-                                    <td>{iter.fx}</td>
-                                    <td>{Math.abs(0-iter.fx)}</td>
+                                    <td>{iter.y}</td>
+                                    <td>{Math.abs(0-iter.y)}</td>
                                 </tr>
                             ))}
                         </tbody>

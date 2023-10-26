@@ -30,7 +30,7 @@ function Simpson() {
         let x = a;
 
         const arrayF = [];
-        h = (b-a)/n;
+        h = (b-a)/n*2;
         x = a;
         while(x <= b) {
             arrayF.push(f(x));

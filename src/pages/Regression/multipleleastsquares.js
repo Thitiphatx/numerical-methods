@@ -122,34 +122,37 @@ export default function MultipleLeastSquares() {
                     <Form>
                         <Form.Group as={Row} className="mb-3">
                             <Col>
-                                <InputGroup className="mb-2">
-                                    <Button onClick={addX} className="w-50">Add x</Button>
+                                <Form.Label>Number of X</Form.Label>
+                                <InputGroup>
+                                    <Button variant="outline-primary" onClick={addX} className="w-50">Add x</Button>
                                     <Button variant="outline-danger" onClick={removeX} className="w-50">Remove x</Button>
                                 </InputGroup>
+                            </Col>
+                            <Col>
+                                <Form.Label>Number of row (n)</Form.Label>
                                 <InputGroup>
-                                    <Button onClick={addRow} className="w-50">Add row</Button>
+                                    <Button variant="outline-primary" onClick={addRow} className="w-50">Add row</Button>
                                     <Button variant="outline-danger" onClick={removeRow} className="w-50">Remove row</Button>
                                 </InputGroup>
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
+                        <Form.Group as={Row} className="mb-3 justify-content-center">
                             {arrayX.map((dataSet, index)=> (
-                                <Col key={index} sm="1">
-                                    <div className="text-center">{"x"+index}</div>
+                                <Col key={index}>
+                                    <h4 className="text-center">{"x"+index}</h4>
                                     {dataSet.map((data, idx)=> (
-                                        <Form.Control key={idx} value={data} className="text-center matrix-field" onChange={(e)=> inputX(e, index, idx)}></Form.Control>
+                                        <Form.Control key={idx} value={data} className="text-center" onChange={(e)=> inputX(e, index, idx)}></Form.Control>
                                     ))}
                                 </Col>
                             ))}
                             
-                            <Col sm="1">
-                            <div className="text-center">y</div>
+                            <Col>
+                            <h4 className="text-center">y</h4>
                                 {arrayY.map((e, index)=> (
-                                    <Form.Control key={index} value={e} onChange={(e)=> inputY(e, index)} className="text-center matrix-field"></Form.Control>
+                                    <Form.Control key={index} value={e} onChange={(e)=> inputY(e, index)} className="text-center"></Form.Control>
                                 ))}
                             
                             </Col>
-                            
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Col>

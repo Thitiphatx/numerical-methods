@@ -45,7 +45,7 @@ function FalsePosition() {
             let fx1 = evaluate(fx, {x: x1})
             newArr.push({
                 x: x1,
-                fx: fx1
+                y: fx1
             })
             if (fx1 * fxr > 0) {
                 xr = x1;
@@ -61,7 +61,6 @@ function FalsePosition() {
         if (iteration == maxIteration) {
             setIterBreak(true);
         }
-        console.log(iteration)
         setResultArr(newArr);
         setResult(x1);
         setLatestData({
@@ -93,7 +92,7 @@ function FalsePosition() {
                 Graph.push(
                     {
                         x: i,
-                        fx: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(latestData.equation, {x: i}),
                     }
                 )
             }
@@ -105,14 +104,14 @@ function FalsePosition() {
                             data={[
                                 {
                                     x: Graph.map((point)=> (point.x)),
-                                    y: Graph.map((point)=> (point.fx)),
+                                    y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
                                     name: latestData.equation,
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
-                                    y: arr.map((point)=> (point.fx)),
+                                    y: arr.map((point)=> (point.y)),
                                     mode: "markers",
                                     marker: {color: 'red'},
                                     name: "False Position"

@@ -33,7 +33,7 @@ function Onepoint() {
             x = evaluate(fx, { x });
             newArr.push({
                 x: xOld,
-                fx: x
+                y: x
             })
         } while ((Math.abs(x - xOld) / x) * 100 >= 0.000001 && iteration < maxIteration && x != 0);
         setLatestData({
@@ -50,11 +50,10 @@ function Onepoint() {
         }
         else {
             const Graph = [];
-            const step = 2*Math.abs(parseFloat(latestData.start)-arr.length) < 10 ? 0.1 : 1;
-            for (let i = parseFloat(latestData.start)-step; i < parseFloat(arr.length)+step; i++) {
+            for (let i = latestData.start; i < arr.length; i++) {
                 Graph.push({
                     x: i,
-                    fx: evaluate(latestData.equation, {x: i}),
+                    y: evaluate(latestData.equation, {x: i}),
                 })
             }
             return (
@@ -65,14 +64,14 @@ function Onepoint() {
                             data={[
                                 {
                                     x: Graph.map((point)=> (point.x)),
-                                    y: Graph.map((point)=> (point.fx)),
+                                    y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: "blue"},
                                     name: latestData.equation
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
-                                    y: arr.map((point)=> (point.fx)),
+                                    y: arr.map((point)=> (point.y)),
                                     mode: "markers",
                                     marker: {color: "red"},
                                     name: "OnePoint"

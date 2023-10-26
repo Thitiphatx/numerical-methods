@@ -62,7 +62,7 @@ function Secant() {
             for (let i = x0-1; i < x1+1; i++) {
                 Graph.push({
                     x: i,
-                    fx: evaluate(latestData.equation, {x: i})
+                    y: evaluate(latestData.equation, {x: i})
                 })
             }
             return (
@@ -73,7 +73,7 @@ function Secant() {
                             data={[
                                 {
                                     x: Graph.map(point => point.x),
-                                    y: Graph.map(point => point.fx),
+                                    y: Graph.map(point => point.y),
                                     mode: "lines",
                                     marker: { color: "blue" },
                                     name: latestData.equation,
