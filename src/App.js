@@ -39,8 +39,6 @@ import LinearLeastSquares from './pages/Regression/linearleastsquares';
 import PolyLeastSquares from './pages/Regression/polynomialleastsquares';
 import MultipleLeastSquares from './pages/Regression/multipleleastsquares';
 
-import FetchTest from './fetch';
-
 function App() {
   return (
     <BrowserRouter>
@@ -72,7 +70,6 @@ function App() {
               <Route path="/linearleastsquares" element={<LinearLeastSquares />} />
               <Route path="/polyleastsquares" element={<PolyLeastSquares />} />
               <Route path="/multileastsquares" element={<MultipleLeastSquares />} />
-              <Route path="/test" element={<FetchTest />} />
             </Routes>
           </Container>
         </main>

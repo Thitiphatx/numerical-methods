@@ -10,3 +10,14 @@ main {
 .matrix-field {
     aspect-ratio: 1/1;
 }
+.input-popup {
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+    z-index: 1;
+}
+
+.lg-modal {
+    width: 90vw !important;
+    max-width: 90vw;
+}

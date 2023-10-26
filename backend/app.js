@@ -1,39 +1,35 @@
 const express = require('express');
 const mysql = require('mysql');
-
+const cors = require('cors');
 const app = express();
-const testData = [
-    {
-        x: 0,
-        y: 0,
-        z: 1,
-    },
-    {
-        x: 3,
-        y: 2,
-        z: 1,
-    },
-    {
-        x: 5,
-        y: 1,
-        z: 4,
-    },
-    {
-        x: 2,
-        y: 7,
-        z: 343,
-    }
-]
 
+app.use(cors());
+app.use(express.json());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'numer_db'
 })
 
-app.get('/', (req, res)=> {
-    res.send(testData);
+db.connect((err) => {
+    if (err) {
+        console.log('Error', err);
+        return
+    }
+    console.log('Conntected');
+})
+
+app.get(`/getHistory/graphical`, (req, res)=> {
+    db.query(`SELECT * FROM inputs WHERE input_method = 'graphical'`, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 
 app.listen(3001, ()=> {
