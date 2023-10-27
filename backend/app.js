@@ -21,8 +21,32 @@ db.connect((err) => {
     console.log('Database conntected');
 })
 
-app.get(`/getHistory/graphical`, (req, res)=> {
-    db.query(`SELECT * FROM inputs WHERE input_method = 'graphical'`, (err, result) => {
+app.get(`/getHistory/:method`, (req, res)=> {
+    const { method } = req.params;
+    db.query("SELECT * FROM inputs WHERE input_method = ?", [method], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+
+app.post('/addHistory', (req, res) => {
+    const ip_method = req.body.ip_method;
+    const ip_json = req.body.ip_json;
+
+    db.query("INSERT INTO inputs (input_method, input_json) VALUES(?,?)", [ip_method, ip_json], (err, result)=> {
+        if (err) {
+            console.log(err);
+        }
+    })
+})
+
+app.delete('/delete/:id', (req, res)=> {
+    const id = req.params.id;
+    db.query("DELETE FROM inputs WHERE input_id = ?", id, (err, result)=> {
         if (err) {
             console.log(err);
         }

@@ -3,8 +3,6 @@ import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
 import { generateTable } from '../../functions/calculator/generateTable';
-import { FetchManager } from '../../functions/fetchmanager';
-import { HistoryManager } from '../../functions/historymanager';
 
 function Graphical() {
     const [FX, setfx] = useState("");
