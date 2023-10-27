@@ -116,12 +116,8 @@ export const methodsPath = [
         title: "Differentation",
         path: [
             {
-                label: "Ordinary Differential",
-                id: "/ordinary"
-            },
-            {
-                label: "Second Divided differences",
-                id: "/seconddivided"
+                label: "Differential O(h)",
+                id: "/differentialoh"
             }
         ]
     }

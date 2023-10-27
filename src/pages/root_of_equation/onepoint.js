@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Card, Form, Button, Row } from 'react-bootstrap';
 import { evaluate } from 'mathjs';
 import { useState } from 'react';
-import { generateTable } from '../../functions/generateTable';
+import { generateTable } from '../../functions/calculator/generateTable';
 import Plot from 'react-plotly.js';
 function Onepoint() {
 

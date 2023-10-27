@@ -15,10 +15,10 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
     if (err) {
-        console.log('Error', err);
+        console.log('Error failed to connect to database', err);
         return
     }
-    console.log('Conntected');
+    console.log('Database conntected');
 })
 
 app.get(`/getHistory/graphical`, (req, res)=> {

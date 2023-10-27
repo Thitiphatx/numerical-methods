@@ -38,6 +38,7 @@ import NewtonDivided from './pages/Interpolation/newtondivided';
 import LinearLeastSquares from './pages/Regression/linearleastsquares';
 import PolyLeastSquares from './pages/Regression/polynomialleastsquares';
 import MultipleLeastSquares from './pages/Regression/multipleleastsquares';
+import DifferentialOh from './pages/differentiation/differentialoh';
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
               <Route path="/linearleastsquares" element={<LinearLeastSquares />} />
               <Route path="/polyleastsquares" element={<PolyLeastSquares />} />
               <Route path="/multileastsquares" element={<MultipleLeastSquares />} />
+              <Route path="/differentialoh" element={<DifferentialOh />} />
             </Routes>
           </Container>
         </main>

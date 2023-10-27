@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { evaluate } from 'mathjs';
 import { Container, Row, Col, Card, Button, Form, Badge } from 'react-bootstrap';
-import { generateTable } from '../../functions/generateTable';
+import { generateTable } from '../../functions/calculator/generateTable';
 import Plot from 'react-plotly.js';
 
 function FalsePosition() {

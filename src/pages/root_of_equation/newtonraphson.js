@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Container, Row, Card, Button, Form } from "react-bootstrap";
 import { evaluate, derivative } from "mathjs";
-import { generateTable } from "../../functions/generateTable";
+import { generateTable } from "../../functions/calculator/generateTable";
 import Plot from "react-plotly.js";
 function NewtonRaphson() {
     const [FX, setFX] = useState("");

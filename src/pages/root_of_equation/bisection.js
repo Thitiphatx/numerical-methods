@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Button, Form, Card, Row, Col } from "react-bootstrap";
 import { evaluate } from 'mathjs';
-import { generateTable } from "../../functions/generateTable";
+import { generateTable } from "../../functions/calculator/generateTable";
 import Plot from "react-plotly.js";
 
 const Bisection =()=>{

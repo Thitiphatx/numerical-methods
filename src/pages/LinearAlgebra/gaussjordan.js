@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
-import { GaussJordanSwap } from "../../functions/gaussJordan";
+import { GaussJordanSwap } from "../../functions/calculator/gaussJordan";
 
 function GaussJordan() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
