@@ -1,8 +1,9 @@
 import React from 'react';
-import { Container, Card, Form, Button, Row } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, InputGroup } from 'react-bootstrap';
 import { evaluate } from 'mathjs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { generateTable } from '../../functions/calculator/generateTable';
+import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from 'react-plotly.js';
 function Onepoint() {
 
@@ -11,7 +12,43 @@ function Onepoint() {
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
     const [latestData, setLatestData] = useState(null);
+    const [saveButton, setSaveButton] = useState(false);
+    const [reFetch, setRefetch] = useState(1);
+    const [history, setHistory] = useState([]);
 
+    const METHOD = "onepoint";
+    // Database handler
+    useEffect(() => {
+        FetchManager(METHOD).then((data) => {
+            setHistory(data);
+        }).catch((error) => {
+            console.error('Error fetching history:', error);
+        });
+    }, [reFetch]);
+    const handleHistoryFill = (index) => {
+        const selectedValue = JSON.parse(history[index].input_json);
+        setFX(selectedValue.equation);
+        setXStart(selectedValue.start);
+    };
+    const saveBtn = ()=> {
+        const sendData = ()=> {
+            PostManager(history, METHOD, JSON.stringify(latestData));
+            setSaveButton(false);
+            let i = reFetch;
+            setRefetch(++i);
+        }
+        if (saveButton) {
+            return (
+                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
+            )
+        } else {
+            return null;
+        }
+    }
+    const updateHistory = () => {
+        let i = reFetch;
+        setRefetch(++i);
+    };
     const inputFX = (event) => {
         setFX(event.target.value);
     }
@@ -42,6 +79,7 @@ function Onepoint() {
         })
         setResultArr(newArr);
         setResult(xOld);
+        setSaveButton(true);
     }
 
     function generatePlot(arr) {
@@ -85,19 +123,25 @@ function Onepoint() {
     }
         return (
             <Container>
+                <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
                 <Card as={Row} className="mb-3">
                     <Card.Header>Onepoint Iteration</Card.Header>
                     <Card.Body>
                         <Form>
                             <Form.Group className="mb-3">
                                     <Form.Label>f(x)</Form.Label>
-                                    <Form.Control type="text" onChange={inputFX} />
+                                    <Form.Control value={FX} onChange={inputFX} />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                     <Form.Label>x start</Form.Label>
-                                    <Form.Control type="number" onChange={inputX} />
+                                    <Form.Control value={xStart} onChange={inputX} />
                             </Form.Group>
-                            <Button variant="primary" onClick={calculator}>Calculate</Button>
+                            <InputGroup>
+                                <Button variant="primary" onClick={calculator}>
+                                    Calculate
+                                </Button>
+                                    {saveBtn()}
+                            </InputGroup>
                         </Form>
                     </Card.Body>
                     <Card.Footer>Answer : {result}</Card.Footer>

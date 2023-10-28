@@ -20,7 +20,6 @@ function FalsePosition() {
 
     const METHOD = "falseposition";
 
-
     // Database handler
     useEffect(() => {
         FetchManager(METHOD).then((data) => {
