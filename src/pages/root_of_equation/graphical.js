@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import { Container, Card, Form, Row, Col, Button, InputGroup } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
 import { generateTable } from '../../functions/calculator/generateTable';
+import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 
 function Graphical() {
     const [FX, setfx] = useState("");
@@ -10,6 +11,43 @@ function Graphical() {
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
     const [latestData, setLatestData] = useState(null);
+    const [saveButton, setSaveButton] = useState(false);
+    const [reFetch, setRefetch] = useState(1);
+    const [history, setHistory] = useState([]);
+
+    // Database handler
+    useEffect(() => {
+        FetchManager("graphical").then((data) => {
+            setHistory(data);
+        }).catch((error) => {
+            console.error('Error fetching history:', error);
+        });
+    }, [reFetch]);
+    const handleHistoryFill = (index) => {
+        const selectedValue = JSON.parse(history[index].input_json);
+        setFX(selectedValue.equation);
+        setXL(selectedValue.start);
+        setXR(selectedValue.end);
+    };
+    const saveBtn = ()=> {
+        const sendData = ()=> {
+            PostManager(history,"graphical", JSON.stringify(latestData));
+            setSaveButton(false);
+            let i = reFetch;
+            setRefetch(++i);
+        }
+        if (saveButton) {
+            return (
+                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
+            )
+        } else {
+            return null;
+        }
+    }
+    const updateHistory = () => {
+        let i = reFetch;
+        setRefetch(++i);
+    };
 
     const inputFx = (event)=> {
         setfx(event.target.value);
@@ -18,14 +56,7 @@ function Graphical() {
         setXstart(event.target.value);
     }
 
-    const history = FetchManager('graphical')
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setXstart(selectedValue.x);
-        setfx(selectedValue.equation);
-    };
-
-    const Calculator = ()=> {
+    const calculator = ()=> {
         let y1, y2, x, error;
         x = parseFloat(xStart);
         y1 = evaluate(FX, {x: x});
@@ -54,6 +85,7 @@ function Graphical() {
         })
         setResult(x);
         setResultArr(newArr);
+        setSaveButton(true);
     }
 
     function generatePlot(arr) {
@@ -109,7 +141,7 @@ function Graphical() {
     
     return(
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} />
+             <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
             <Card as={Row} className="mb-3">
                 <Card.Header>Graphical Method</Card.Header>
                 <Card.Body>
@@ -126,7 +158,12 @@ function Graphical() {
                                 <Form.Control value={xStart} onChange={(e)=> inputXStart(e)}></Form.Control>
                             </Col>
                         </Form.Group>
-                        <Button variant="primary" onClick={Calculator}>Calculate</Button>
+                        <InputGroup>
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                            {saveBtn()}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer: {result}</Card.Footer>
