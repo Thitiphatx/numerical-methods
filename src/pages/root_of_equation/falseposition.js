@@ -1,8 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { evaluate } from 'mathjs';
-import { Container, Row, Col, Card, Button, Form, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Badge, InputGroup } from 'react-bootstrap';
 import { generateTable } from '../../functions/calculator/generateTable';
+import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from 'react-plotly.js';
 
 function FalsePosition() {
@@ -13,6 +14,46 @@ function FalsePosition() {
     const [resultArr, setResultArr] = useState([]);
     const [latestData, setLatestData] = useState(null);
     const [iterBreak, setIterBreak] = useState(false);
+    const [saveButton, setSaveButton] = useState(false);
+    const [reFetch, setRefetch] = useState(1);
+    const [history, setHistory] = useState([]);
+
+    const METHOD = "falseposition";
+
+
+    // Database handler
+    useEffect(() => {
+        FetchManager(METHOD).then((data) => {
+            setHistory(data);
+        }).catch((error) => {
+            console.error('Error fetching history:', error);
+        });
+    }, [reFetch]);
+    const handleHistoryFill = (index) => {
+        const selectedValue = JSON.parse(history[index].input_json);
+        setFX(selectedValue.equation);
+        setXL(selectedValue.start);
+        setXR(selectedValue.end);
+    };
+    const saveBtn = ()=> {
+        const sendData = ()=> {
+            PostManager(history, METHOD, JSON.stringify(latestData));
+            setSaveButton(false);
+            let i = reFetch;
+            setRefetch(++i);
+        }
+        if (saveButton) {
+            return (
+                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
+            )
+        } else {
+            return null;
+        }
+    }
+    const updateHistory = () => {
+        let i = reFetch;
+        setRefetch(++i);
+    };
 
     const inputFX = (event)=> {
         setFX(event.target.value);
@@ -28,8 +69,8 @@ function FalsePosition() {
         setIterBreak(false);
         let iteration = 0;
         let maxIteration = 100;
-        let xl = XL || 0.000001;
-        let xr = XR || 0.000001;
+        let xl = parseFloat(XL) || 0.000001;
+        let xr = parseFloat(XR) || 0.000001;
         let fx = FX;
         if (fx == "") return;
 
@@ -68,6 +109,7 @@ function FalsePosition() {
             start: XL,
             end: XR
         })
+        setSaveButton(true);
     }
 
     const resultBadge = ()=> {
@@ -134,6 +176,7 @@ function FalsePosition() {
 
     return (
         <Container>
+            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
             <Card as={Row} className="mb-3">
                 <Card.Header>False Position Medthod</Card.Header>
                 <Card.Body>
@@ -141,20 +184,25 @@ function FalsePosition() {
                         <Form.Group as={Row} className="mb-3">
                             <Col>
                                 <Form.Label>F(x)</Form.Label>
-                                <Form.Control type="string" onChange={inputFX}></Form.Control>
+                                <Form.Control value={FX} onChange={inputFX}></Form.Control>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Col>
                                 <Form.Label>XL</Form.Label>
-                                <Form.Control type="number" onChange={inputXL}></Form.Control>
+                                <Form.Control value={XL} onChange={inputXL}></Form.Control>
                             </Col>
                             <Col>
                                 <Form.Label>XR</Form.Label>
-                                <Form.Control type="number" onChange={inputXR}></Form.Control>
+                                <Form.Control value={XR} onChange={inputXR}></Form.Control>
                             </Col>
                         </Form.Group>
-                        <Button variant="primary" onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button variant="primary" onClick={calculator}>
+                                Calculate
+                            </Button>
+                                {saveBtn()}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result} {resultBadge()}</Card.Footer>

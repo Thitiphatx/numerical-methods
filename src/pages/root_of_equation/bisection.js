@@ -17,9 +17,11 @@ const Bisection =()=>{
     const [reFetch, setRefetch] = useState(1);
     const [history, setHistory] = useState([]);
 
+    const METHOD = "bisection";
+
     // Database handler
     useEffect(() => {
-        FetchManager("bisection").then((data) => {
+        FetchManager(METHOD).then((data) => {
             setHistory(data);
         }).catch((error) => {
             console.error('Error fetching history:', error);
@@ -33,7 +35,7 @@ const Bisection =()=>{
     };
     const saveBtn = ()=> {
         const sendData = ()=> {
-            PostManager(history,"bisection", JSON.stringify(latestData));
+            PostManager(history,METHOD, JSON.stringify(latestData));
             setSaveButton(false);
             let i = reFetch;
             setRefetch(++i);

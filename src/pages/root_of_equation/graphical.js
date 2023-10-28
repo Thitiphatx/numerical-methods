@@ -15,9 +15,11 @@ function Graphical() {
     const [reFetch, setRefetch] = useState(1);
     const [history, setHistory] = useState([]);
 
+    const METHOD = "graphical";
+
     // Database handler
     useEffect(() => {
-        FetchManager("graphical").then((data) => {
+        FetchManager(METHOD).then((data) => {
             setHistory(data);
         }).catch((error) => {
             console.error('Error fetching history:', error);
@@ -25,13 +27,12 @@ function Graphical() {
     }, [reFetch]);
     const handleHistoryFill = (index) => {
         const selectedValue = JSON.parse(history[index].input_json);
-        setFX(selectedValue.equation);
-        setXL(selectedValue.start);
-        setXR(selectedValue.end);
+        setfx(selectedValue.equation);
+        setXstart(selectedValue.start);
     };
     const saveBtn = ()=> {
         const sendData = ()=> {
-            PostManager(history,"graphical", JSON.stringify(latestData));
+            PostManager(history,METHOD, JSON.stringify(latestData));
             setSaveButton(false);
             let i = reFetch;
             setRefetch(++i);
@@ -141,7 +142,7 @@ function Graphical() {
     
     return(
         <Container>
-             <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
             <Card as={Row} className="mb-3">
                 <Card.Header>Graphical Method</Card.Header>
                 <Card.Body>

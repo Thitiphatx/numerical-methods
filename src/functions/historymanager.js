@@ -7,7 +7,8 @@ import axios from "axios";
 
 export function FetchManager(method) {
     return axios.get(`http://localhost:3001/getHistory/${method}`).then((response) => {
-        return response.data;
+        if (response.data != null)
+            return response.data;
     });
 }
 
