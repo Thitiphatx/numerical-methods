@@ -53,7 +53,7 @@ export function DatabaseManager(method, {fillData}) {
     function GenerateInput(keys, inputJson, type) {
         if (type === "Matrix") {
             return (
-                <Row key="matrix-input"> {/* Add the key here */}
+                <Row key="matrix-input">
                     <Col className="d-flex justify-content-center" style={{maxWidth: "30rem"}}>
                             <div className="mx-3 text-center">
                                 <h4>A</h4>
