@@ -3,52 +3,31 @@ import { Container, Card, Form, Button, Row, InputGroup } from 'react-bootstrap'
 import { evaluate } from 'mathjs';
 import { useState, useEffect } from 'react';
 import { generateTable } from '../../functions/calculator/generateTable';
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from 'react-plotly.js';
+import { CalOnepoint } from '../../functions/calculator/Root of Equation/Onepoint';
+import { DatabaseManager } from '../../functions/DatabaseManager';
 function Onepoint() {
 
     const [FX, setFX] = useState("");
     const [xStart, setXStart] = useState(0);
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
-    const [latestData, setLatestData] = useState(null);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "onepoint";
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setFX(selectedValue.equation);
-        setXStart(selectedValue.start);
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history, METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const METHOD = "Onepoint";
+    const TYPE = "XY";
+
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setxStart(inputJson.start);
     }
-    const updateHistory = () => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
+
     const inputFX = (event) => {
         setFX(event.target.value);
     }
@@ -57,29 +36,14 @@ function Onepoint() {
     }
 
     const calculator = () => {
-        let iteration = 0;
-        let maxIteration = 100;
-        let xOld;
-        let fx = FX;
-        let x = parseFloat(xStart);
-
-        const newArr = [];
-        do {
-            iteration++;
-            xOld = x;
-            x = evaluate(fx, { x });
-            newArr.push({
-                x: xOld,
-                y: x
-            })
-        } while ((Math.abs(x - xOld) / x) * 100 >= 0.000001 && iteration < maxIteration && x != 0);
-        setLatestData({
+        const {newArr, xOld} = CalOnepoint(FX, xStart);
+        setSaveAble(true);
+        setInputs({
             equation: FX,
             start: xStart
         })
         setResultArr(newArr);
         setResult(xOld);
-        setSaveButton(true);
     }
 
     function generatePlot(arr) {
@@ -88,10 +52,10 @@ function Onepoint() {
         }
         else {
             const Graph = [];
-            for (let i = latestData.start; i < arr.length; i++) {
+            for (let i = inputs.start; i < arr.length; i++) {
                 Graph.push({
                     x: i,
-                    y: evaluate(latestData.equation, {x: i}),
+                    y: evaluate(inputs.equation, {x: i}),
                 })
             }
             return (
@@ -105,7 +69,7 @@ function Onepoint() {
                                     y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: "blue"},
-                                    name: latestData.equation
+                                    name: inputs.equation
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
@@ -123,7 +87,8 @@ function Onepoint() {
     }
         return (
             <Container>
-                <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+                {db.HistoryTab()}
+            
                 <Card as={Row} className="mb-3">
                     <Card.Header>Onepoint Iteration</Card.Header>
                     <Card.Body>
@@ -140,7 +105,9 @@ function Onepoint() {
                                 <Button variant="primary" onClick={calculator}>
                                     Calculate
                                 </Button>
-                                    {saveBtn()}
+                                {saveAble && (
+                                    <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                                )}
                             </InputGroup>
                         </Form>
                     </Card.Body>
