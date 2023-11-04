@@ -1,92 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Card, Form, Row, Col, Button, InputGroup } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 import { evaluate } from 'mathjs';
 import { generateTable } from '../../functions/calculator/generateTable';
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
-
+import { CalGraphical } from '../../functions/calculator/Root of Equation/Graphical';
+import { DatabaseManager } from '../../functions/DatabaseManager';
 function Graphical() {
-    const [FX, setfx] = useState("");
+    const [FX, setFX] = useState("");
     const [xStart, setXstart] = useState("");
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
-    const [latestData, setLatestData] = useState(null);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "graphical";
+    const METHOD = "Graphical";
+    const TYPE = "XY";
 
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setfx(selectedValue.equation);
-        setXstart(selectedValue.start);
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history,METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setXstart(inputJson.start);
     }
-    const updateHistory = () => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputFx = (event)=> {
-        setfx(event.target.value);
+        setFX(event.target.value);
     }
     const inputXStart = (event)=> {
         setXstart(event.target.value);
     }
 
     const calculator = ()=> {
-        let y1, y2, x, error;
-        x = parseFloat(xStart);
-        y1 = evaluate(FX, {x: x});
-        y2 = 0;
-        error = 0.000001;
-        const newArr = [];
-        let step = 1;
-        while(Math.abs(y1) > error && y1 != 0) {
-            x += step;
-            y2 = evaluate(FX, {x: x});
-            if (y1 * y2 > 0) {
-                y1 = y2;
-                newArr.push({
-                    x: x,
-                    y: y1,
-                })
-            }
-            else {
-                x -= step;
-                step /= 10;
-            }
-        }
-        setLatestData({
+        const {newArr, x} = CalGraphical(FX, xStart);
+        setInputs({
             equation: FX,
             start: xStart
         })
+        setSaveAble(true);
         setResult(x);
         setResultArr(newArr);
-        setSaveButton(true);
     }
 
     function generatePlot(arr) {
@@ -95,10 +50,10 @@ function Graphical() {
         }
         else {
             const Graph = [];
-                for (let i = parseFloat(latestData.start)-1; i < arr.length+1; i++) {
+                for (let i = parseFloat(inputs.start)-1; i < arr.length+1; i++) {
                     Graph.push({
                         x: i,
-                        y: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(inputs.equation, {x: i}),
                     });
                 }
             return (
@@ -112,7 +67,7 @@ function Graphical() {
                                     y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
-                                    name: latestData.equation,
+                                    name: inputs.equation,
                                 },
                                 {
                                     x: resultArr.map((point)=> (point.x)),
@@ -142,7 +97,7 @@ function Graphical() {
     
     return(
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Graphical Method</Card.Header>
                 <Card.Body>
@@ -163,7 +118,9 @@ function Graphical() {
                         <Button variant="primary" onClick={calculator}>
                             Calculate
                         </Button>
-                            {saveBtn()}
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
                         </InputGroup>
                     </Form>
                 </Card.Body>

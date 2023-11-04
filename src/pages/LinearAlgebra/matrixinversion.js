@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
+import { DatabaseManager } from "../../functions/DatabaseManager";
+import { CalMatrixInversion } from "../../functions/calculator/LinearAlgebra/MatrixInversion";
 
 function MatrixInversion() {
     const [size, setSize] = useState(3);
@@ -12,6 +14,23 @@ function MatrixInversion() {
     );
     const [Bmatrix, setBmatrix] = useState([0, 0, 0]);
     const [result, setResult] = useState([0, 0, 0]);
+    const [inputs, setInputs] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+
+
+    // Database Handler
+    const METHOD = "MatrixInvert";
+    const TYPE = "Matrix";
+    const fillData = (inputJson) => {
+        setSize(inputJson.size);
+        setAmatrix(inputJson.A);
+        setBmatrix(inputJson.B);
+    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputSize = (e) => {
         setSize(parseInt(e.target.value));
@@ -45,61 +64,20 @@ function MatrixInversion() {
     };
 
     const calculator = () => {
-        const arr = JSON.parse(JSON.stringify(Amatrix));
-        const Identity = generateIdentityMatrix(size);
-        GaussJordan(arr, Identity);
-        
-
-        setResult(MatrixMultiply(Identity, Bmatrix));
-    };
-
-    const MatrixMultiply = (I, b)=> {
-        var results = [];
-        for (let i = 0; i < size; i++) {
-            results[i] = 0;
-            for (let j = 0; j < size; j++) {
-                results[i] += parseFloat(I[i][j]) * parseFloat(b[j]);
-            }
+        const newInputs = {
+            size: size,
+            A: Amatrix,
+            B: Bmatrix,
         }
-        return results;
-    }
-
-    const GaussJordan = (matrix, Imatrix) => {
-        for (let i = 0; i < size; i++) {
-            if (matrix[i][i] == 0) {
-                matrix[i][i] = 1e-15;
-            }
-            let fixed = matrix[i][i];
-
-            for (let j = 0; j < size; j++) {
-                Imatrix[i][j] /= fixed;
-                matrix[i][j] /= fixed;
-            }
-            for (let j = 0; j < size; j++) {
-                if (i == j) continue;
-                let factor = matrix[j][i];
-                for (let k = 0; k < size; k++) {
-                    Imatrix[j][k] -= factor * Imatrix[i][k];
-                    matrix[j][k] -= factor * matrix[i][k];
-                }
-            }
-        }
-    }
-
-    const generateIdentityMatrix = (n) => {
-        const newMatrix = [];
-        for (let i = 0; i < n; i++) {
-            newMatrix[i] = [];
-            for (let j = 0; j < n; j++) {
-                if (i === j) newMatrix[i][j] = 1;
-                else newMatrix[i][j] = 0;
-            }
-        }
-        return newMatrix;
+        const x = CalMatrixInversion(Amatrix, Bmatrix, size);
+        setInputs(newInputs);
+        setSaveAble(true);
+        setResult(x);
     };
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Matrix Inversion</Card.Header>
                 <Card.Body>
@@ -140,7 +118,12 @@ function MatrixInversion() {
                             </div>
                             </Col>
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 {result.map((x, index) => (

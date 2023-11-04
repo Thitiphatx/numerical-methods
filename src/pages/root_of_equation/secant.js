@@ -1,90 +1,45 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Row, Col, Card, Button, Form, Table, InputGroup } from "react-bootstrap";
 import { evaluate } from "mathjs";
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from "react-plotly.js";
+import { DatabaseManager } from "../../functions/DatabaseManager";
+import { CalSecant } from "../../functions/calculator/Root of Equation/Secant";
 
 function Secant() {
-    const [fx, setFx] = useState("");
+    const [FX, setFX] = useState("");
     const [x0, setx0] = useState(0);
     const [x1, setx1] = useState(0);
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
-    const [latestData, setLatestData] = useState(null);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "secant";
+    const METHOD = "Bisection";
+    const TYPE = "XY";
 
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setFx(selectedValue.equation);
-        setx0(selectedValue.x0);
-        setx1(selectedValue.x1);
-        FetchManager(METHOD).then((data)=> {
-            setHistory(data);
-        });
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history, METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setXL(inputJson.start);
+        setXR(inputJson.end);
     }
-    const updateHistory = ({setRefetch}, ) => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
+    
     const calculator = ()=> {
-        let local_x0 = parseFloat(x0);
-        let local_x1 = parseFloat(x1);
-        let x2, xOld, fx0, fx1;
-
-        const newArr = [];
-        do {
-            fx0 = evaluate(fx, {x:local_x0});
-            fx1 = evaluate(fx, {x:local_x1});
-            x2 = local_x0 - ( fx0 * (local_x0 - local_x1 ) ) / ( fx0 - fx1)
-            xOld = local_x1;
-            newArr.push(
-                {
-                    x0: local_x0,
-                    x1: local_x1,
-                    x2: x2,
-                }
-            )
-            local_x0 = local_x1;
-            local_x1 = x2;
-            
-
-        } while((Math.abs(x2-xOld)/x2) * 100 >= 0.000001);
-        setLatestData({
-            equation: fx,
+        const { newArr, x2 } = CalSecant(FX, x0, x1);
+        setSaveAble(true);
+        setInputs({
+            equation: FX,
             x0: x0,
             x1: x1,
         })
         setResultArr(newArr || 0);
         setResult(x2);
-        setSaveButton(true);
+        setSaveAble(true);
     }
 
     const inputX0 = (event)=> {
@@ -93,8 +48,8 @@ function Secant() {
     const inputX1 = (event)=> {
         setx1(event.target.value);
     }
-    const inputFx = (event)=> {
-        setFx(event.target.value);
+    const inputFX = (event)=> {
+        setFX(event.target.value);
     }
 
     function generatePlot(arr) {
@@ -105,7 +60,7 @@ function Secant() {
             for (let i = x0-1; i < x1+1; i++) {
                 Graph.push({
                     x: i,
-                    y: evaluate(latestData.equation, {x: i})
+                    y: evaluate(inputs.equation, {x: i})
                 })
             }
             return (
@@ -119,11 +74,11 @@ function Secant() {
                                     y: Graph.map(point => point.y),
                                     mode: "lines",
                                     marker: { color: "blue" },
-                                    name: latestData.equation,
+                                    name: inputs.equation,
                                 },
                                 {
                                     x: arr.map((point)=> (point.x2)),
-                                    y: arr.map((point)=> (evaluate(latestData.equation, {x: point.x2}))),
+                                    y: arr.map((point)=> (evaluate(inputs.equation, {x: point.x2}))),
                                     mode: "markers",
                                     marker: {color: 'red'},
                                     name: "Secant"
@@ -183,14 +138,14 @@ function Secant() {
     }
     return(
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Secant Method</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>f(x)</Form.Label>
-                            <Form.Control value={fx} onChange={inputFx}></Form.Control>
+                            <Form.Control value={FX} onChange={inputFX}></Form.Control>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Col>
@@ -204,10 +159,12 @@ function Secant() {
                             
                         </Form.Group>
                         <InputGroup>
-                            <Button variant="primary" onClick={calculator}>
-                                Calculate
-                            </Button>
-                                {saveBtn()}
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
                         </InputGroup>
                     </Form>
                 </Card.Body>

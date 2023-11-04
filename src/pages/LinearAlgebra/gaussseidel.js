@@ -1,13 +1,31 @@
 import React from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { DatabaseManager } from "../../functions/DatabaseManager";
+import { CalGaussSeidel } from "../../functions/calculator/LinearAlgebra/GaussSeidel";
 
 function GaussSeidel() {
     const [matrixA, setMatrixA] = useState([[0,0,0],[0,0,0],[0,0,0]]);
     const [matrixB, setMatrixB] = useState([0,0,0]);
     const [matrixX, setMatrixX] = useState([0,0,0]);
     const [size, setSize] = useState(3);
+    const [inputs, setInputs] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
 
+
+    // Database Handler
+    const METHOD = "GaussSeidel";
+    const TYPE = "Matrix";
+    const fillData = (inputJson) => {
+        setSize(inputJson.size);
+        setMatrixA(inputJson.A);
+        setMatrixB(inputJson.B);
+    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
     
     // input handler
     const inputSize = (e)=> {
@@ -32,38 +50,20 @@ function GaussSeidel() {
 
     // calculate
     const calculator = ()=> {
-        let A = JSON.parse(JSON.stringify(matrixA));
-        let B = [...matrixB];
-        let xOld = [];
-        let x = new Array(parseInt(size)).fill(0);
-        let error = 0.001;
-        let passCounter = 0;
-
-        while(passCounter < size) {
-            for (let i = 0; i < size; i++) {
-                xOld[i] = x[i];
-            }
-
-            for (let i = 0; i < size; i++) {
-                let sum = B[i];
-                for (let j = 0; j < size; j++) {
-                    if (i == j) continue;
-                    sum -= A[i][j]*x[j];
-                }
-                x[i] = sum/A[i][i];
-            }
-            passCounter = 0;
-            for (let i = 0; i < size; i++) {
-                if (Math.abs((x[i] - xOld[i]) / x[i]) * 100 < error) {
-                    passCounter++;
-                }
-            }
+        const x = CalGaussSeidel(matrixA, matrixB, size);
+        const newInputs = {
+            size: size,
+            A: matrixA,
+            B: matrixB
         }
+        setSaveAble(true);
+        setInputs(newInputs);
         setMatrixX(x);
     }
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Gauss Seidel Iteration</Card.Header>
                 <Card.Body>
@@ -108,8 +108,13 @@ function GaussSeidel() {
                                 
                             </Col>
                         </Form.Group>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                         
-                        <Button onClick={calculator}>Calculate</Button>
                     </Form>
                 </Card.Body>
                 {matrixX.map((e, index)=> (

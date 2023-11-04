@@ -49,7 +49,7 @@ function ConjugateGradient() {
 
     // calculate
     const calculator = ()=> {
-        const {xArray, x} = CalConjugate(matrixA, matrixB, size);
+        const x = CalConjugate(matrixA, matrixB, size);
         const newInputs = {
             size: size,
             A: matrixA,

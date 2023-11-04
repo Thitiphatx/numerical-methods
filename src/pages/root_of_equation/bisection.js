@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Button, Form, Card, Row, Col, InputGroup } from "react-bootstrap";
-import { evaluate } from 'mathjs';
 import { generateTable } from "../../functions/calculator/generateTable";
 import Plot from "react-plotly.js";
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
+import { CalBisection } from "../../functions/calculator/Root of Equation/Bisection";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 const Bisection =()=>{
 
     // declare useState
@@ -11,47 +11,23 @@ const Bisection =()=>{
     const [XL, setXL] = useState(0);
     const [XR, setXR] = useState(0);
     const [result, setResult] = useState(0);
-    const [latestData, setLatestData] = useState([]);
     const [resultArr, setResultArr] = useState([]);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "bisection";
+    const METHOD = "Bisection";
+    const TYPE = "XY";
 
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setFX(selectedValue.equation);
-        setXL(selectedValue.start);
-        setXR(selectedValue.end);
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history,METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setXL(inputJson.start);
+        setXR(inputJson.end);
     }
-    const updateHistory = () => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     // input handler
     const inputFX = (e)=> {
@@ -66,37 +42,16 @@ const Bisection =()=>{
 
     // calculate function
     const calculator = ()=> {
-        const newResultArr = [];
-        let Xl = parseFloat(XL);
-        let Xr = parseFloat(XR);
-        let Xm = (Xl+Xr)/2;
-        let fXm = evaluate(FX, {x: Xm});
-        let Xm_old = 0;
-        let e = 0.000001;
-
-        while(Math.abs((Xm-Xm_old)/Xm * 100) >= e) {
-            let fXr = evaluate(FX, {x: Xr});
-            if (fXr * fXm > 0) {
-                Xr = Xm;
-            }
-            else {
-                Xl = Xm;
-            }
-            Xm_old = Xm;
-            Xm = (Xl + Xr)/2;
-            fXm = evaluate(FX, {x: Xm});
-            newResultArr.push({
-                x: Xm.toPrecision(7),
-                y: fXm.toPrecision(7),
-            })
-        }
-        setResultArr(newResultArr);
-        setSaveButton(true);
-        setLatestData({
+        const {newResultArr, Xm} = CalBisection(XL, XR, FX);
+        const newInputs = {
             equation: FX,
             start: XL,
             end: XR
-        });
+        }
+
+        setSaveAble(true);
+        setResultArr(newResultArr);
+        setInputs(newInputs);
         setResult(Xm);
     }
 
@@ -106,10 +61,10 @@ const Bisection =()=>{
         }
         else {
             const Graph = [];
-            for (let i = parseFloat(latestData.start)-1; i < parseFloat(latestData.end)+1; i++) {
+            for (let i = parseFloat(inputs.start)-1; i < parseFloat(inputs.end)+1; i++) {
                 const x = i
                 try {
-                    const fx = evaluate(latestData.equation, {x: i})
+                    const fx = evaluate(inputs.equation, {x: i})
                     Graph.push({
                         x,
                         y: fx,
@@ -130,7 +85,7 @@ const Bisection =()=>{
                                     y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
-                                    name: latestData.equation
+                                    name: inputs.equation
                                 },
                                 {
                                     x: arr.map((point) => (point.x)),
@@ -161,7 +116,7 @@ const Bisection =()=>{
 
     return (
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Bisection Method</Card.Header>
                 <Card.Body>
@@ -186,7 +141,9 @@ const Bisection =()=>{
                         <Button variant="primary" onClick={calculator}>
                             Calculate
                         </Button>
-                            {saveBtn()}
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
                         </InputGroup>
                         
                     </Form>

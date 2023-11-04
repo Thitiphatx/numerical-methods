@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
-
+import { DatabaseManager } from "../../functions/DatabaseManager";
+import { CalLUDecomp } from "../../functions/calculator/LinearAlgebra/Ludecomp";
 function LUDecomposition() {
     const [size, setSize] = useState(3);
     const [Amatrix, setAmatrix] = useState(
@@ -12,6 +13,23 @@ function LUDecomposition() {
     );
     const [Bmatrix, setBmatrix] = useState([0, 0, 0]);
     const [result, setResult] = useState([0, 0, 0]);
+    const [inputs, setInputs] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+
+
+    // Database Handler
+    const METHOD = "LUDecomp";
+    const TYPE = "Matrix";
+    const fillData = (inputJson) => {
+        setSize(inputJson.size);
+        setAmatrix(inputJson.A);
+        setBmatrix(inputJson.B);
+    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputSize = (e) => {
         setSize(parseInt(e.target.value));
@@ -45,59 +63,20 @@ function LUDecomposition() {
     };
 
     const calculator = () => {
-        let LMatrix = [];
-        let UMatrix = [];
-        let YMatrix = new Array(size).fill(0);
-        let XMatrix = new Array(size).fill(0);
-
-        for (let i = 0; i < size; i++) {
-            LMatrix[i] = new Array(size).fill(0);
-            UMatrix[i] = new Array(size).fill(0);
+        const XMatrix = CalLUDecomp(Amatrix, Bmatrix, size);
+        const newInputs = {
+            size: size,
+            A: Amatrix,
+            B: Bmatrix
         }
-
-        for (let i = 0; i < size; i++) {
-            // finding U
-            for (let j = 0; j < size; j++) {
-                let sum = 0;
-                for (let k = 0; k < size; k++) {
-                    sum += LMatrix[i][k] * UMatrix[k][j];
-                }
-                UMatrix[i][j] = Amatrix[i][j] - sum;
-            }
-
-            // finding L
-            for (let j = 0; j < size; j++) {
-                let sum = 0;
-                for (let k = 0; k < size; k++) {
-                    sum += LMatrix[j][k] * UMatrix[k][i];
-                }
-                LMatrix[j][i] = (Amatrix[j][i] - sum) / UMatrix[i][i];
-            }
-        }
-
-        // find Y from LY = B
-        for (let i = 0; i < size; i++) {
-            let sum = 0;
-            for (let j = 0; j < size; j++) {
-                sum += LMatrix[i][j] * YMatrix[j];
-            }
-            YMatrix[i] = (Bmatrix[i] - sum) / LMatrix[i][i];
-        }
-
-        // find X from UX = Y
-        for (let i = size - 1; i >= 0; i--) {
-            let sum = 0;
-            for (let j = i + 1; j < size; j++) {
-                sum += UMatrix[i][j] * XMatrix[j];
-            }
-            XMatrix[i] = (YMatrix[i] - sum) / UMatrix[i][i];
-        }
-
+        setInputs(newInputs);
+        setSaveAble(true);
         setResult(XMatrix);
     };
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>LU Decomposition</Card.Header>
                 <Card.Body>
@@ -138,7 +117,12 @@ function LUDecomposition() {
                                 </div>  
                             </Col>
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 {result.map((x, index) => (

@@ -1,10 +1,11 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { evaluate } from 'mathjs';
-import { Container, Row, Col, Card, Button, Form, Badge, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { generateTable } from '../../functions/calculator/generateTable';
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from 'react-plotly.js';
+import { CalFalseposition } from '../../functions/calculator/Root of Equation/Falseposition';
+import { DatabaseManager } from '../../functions/DatabaseManager';
 
 function FalsePosition() {
     const [FX, setFX] = useState("");
@@ -12,47 +13,22 @@ function FalsePosition() {
     const [XR, setXR] = useState(0);
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
-    const [latestData, setLatestData] = useState(null);
-    const [iterBreak, setIterBreak] = useState(false);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "falseposition";
+    const METHOD = "Falseposition";
+    const TYPE = "XY";
 
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setFX(selectedValue.equation);
-        setXL(selectedValue.start);
-        setXR(selectedValue.end);
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history, METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setXL(inputJson.start);
+        setXR(inputJson.end);
     }
-    const updateHistory = () => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputFX = (event)=> {
         setFX(event.target.value);
@@ -65,61 +41,15 @@ function FalsePosition() {
     }
 
     const calculator = ()=> {
-        setIterBreak(false);
-        let iteration = 0;
-        let maxIteration = 100;
-        let xl = parseFloat(XL) || 0.000001;
-        let xr = parseFloat(XR) || 0.000001;
-        let fx = FX;
-        if (fx == "") return;
-
-        let fxl = evaluate(fx, {x: xl})
-        let fxr = evaluate(fx, {x: xr})
-        let x1 = (xl*fxr - xr*fxl)/(fxr-fxl);
-        let x1_old = 0;
-
-        const newArr = [];
-        
-        while(Math.abs(x1-x1_old)/x1 * 100 >= 0.000001 && iteration < maxIteration) {
-            iteration++;
-            let fx1 = evaluate(fx, {x: x1})
-            newArr.push({
-                x: x1,
-                y: fx1
-            })
-            if (fx1 * fxr > 0) {
-                xr = x1;
-                fxr = fx1;
-            }
-            else {
-                xl = x1;
-                fxl = fx1;
-            }
-            x1_old = x1;
-            x1 = (xl*fxr - xr*fxl)/(fxr-fxl);
-        }
-        if (iteration == maxIteration) {
-            setIterBreak(true);
-        }
+        const {newArr, x1} = CalFalseposition(FX, XL, XR);
+        setSaveAble(true);
         setResultArr(newArr);
         setResult(x1);
-        setLatestData({
+        setInputs({
             equation: FX,
             start: XL,
             end: XR
         })
-        setSaveButton(true);
-    }
-
-    const resultBadge = ()=> {
-        if (iterBreak) {
-            return (
-                <Badge bg="danger">Max iteration</Badge>
-            )
-        }
-        else {
-            return null
-        }
     }
 
     const generatePlot = (arr)=> {
@@ -128,12 +58,12 @@ function FalsePosition() {
         }
         else {
             const Graph = [];
-            const step = Math.abs(latestData.start-latestData.end) < 10 ? 0.1 : 1;
-            for (let i = parseFloat(latestData.start)-1; i < parseFloat(latestData.end)+1; i += step) {
+            const step = Math.abs(inputs.start-inputs.end) < 10 ? 0.1 : 1;
+            for (let i = parseFloat(inputs.start)-1; i < parseFloat(inputs.end)+1; i += step) {
                 Graph.push(
                     {
                         x: i,
-                        y: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(inputs.equation, {x: i}),
                     }
                 )
             }
@@ -148,7 +78,7 @@ function FalsePosition() {
                                     y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
-                                    name: latestData.equation,
+                                    name: inputs.equation,
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
@@ -175,7 +105,7 @@ function FalsePosition() {
 
     return (
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>False Position Medthod</Card.Header>
                 <Card.Body>
@@ -197,14 +127,16 @@ function FalsePosition() {
                             </Col>
                         </Form.Group>
                         <InputGroup>
-                            <Button variant="primary" onClick={calculator}>
-                                Calculate
-                            </Button>
-                                {saveBtn()}
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
                         </InputGroup>
                     </Form>
                 </Card.Body>
-                <Card.Footer>Answer : {result} {resultBadge()}</Card.Footer>
+                <Card.Footer>Answer : {result}</Card.Footer>
             </Card>
             {generatePlot(resultArr)}
             {generateTable(resultArr)}

@@ -1,78 +1,41 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Container, Row, Card, Button, Form, InputGroup } from "react-bootstrap";
-import { evaluate, derivative } from "mathjs";
+import { evaluate } from "mathjs";
 import { generateTable } from "../../functions/calculator/generateTable";
-import { HistoryManager, FetchManager, PostManager } from '../../functions/historymanager';
 import Plot from "react-plotly.js";
-
+import { CalNewtonRaph } from "../../functions/calculator/Root of Equation/NewtonRaphson";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 function NewtonRaphson() {
     const [FX, setFX] = useState("");
     const [xStart, setxStart] = useState(0);
     const [result, setResult] = useState(0);
     const [resultArr, setResultArr] = useState([]);
-    const [latestData, setLatestData] = useState(null);
-    const [saveButton, setSaveButton] = useState(false);
-    const [reFetch, setRefetch] = useState(1);
-    const [history, setHistory] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
-    const METHOD = "newtonraphson";
+    const METHOD = "Newtonraph";
+    const TYPE = "XY";
 
-    // Database handler
-    useEffect(() => {
-        FetchManager(METHOD).then((data) => {
-            setHistory(data);
-        }).catch((error) => {
-            console.error('Error fetching history:', error);
-        });
-    }, [reFetch]);
-    const handleHistoryFill = (index) => {
-        const selectedValue = JSON.parse(history[index].input_json);
-        setFX(selectedValue.equation);
-        setxStart(selectedValue.start);
-    };
-    const saveBtn = ()=> {
-        const sendData = ()=> {
-            PostManager(history, METHOD, JSON.stringify(latestData));
-            setSaveButton(false);
-            let i = reFetch;
-            setRefetch(++i);
-        }
-        if (saveButton) {
-            return (
-                <Button onClick={sendData} variant="outline-primary">Save Inputs</Button>
-            )
-        } else {
-            return null;
-        }
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setxStart(inputJson.start);
     }
-    const updateHistory = () => {
-        let i = reFetch;
-        setRefetch(++i);
-    };
-    const calculator = ()=> {
-        let iteration = 0;
-        let maxIteration = 100;
-        let xOld;
-        let x = parseFloat(xStart);
-        const newArr = [];
-        do {
-            iteration++;
-            xOld = x;
-            x = xOld - evaluate(FX, {x: xOld}) / derivative(FX, 'x').evaluate({x: xOld});
-            newArr.push({
-                x: xOld,
-                y: x
-            })
-        } while((Math.abs(x-xOld)/x) * 100 >= 0.000001 && iteration < maxIteration);
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
-        setLatestData({
+    const calculator = ()=> {
+        const {newArr, x} = CalNewtonRaph(FX, xStart);
+        setSaveAble(true);
+        setInputs({
             equation: FX,
             start: xStart,
         })
         setResultArr(newArr);
         setResult(x);
-        setSaveButton(true);
     }
 
     const inputX = (event)=> {
@@ -88,12 +51,12 @@ function NewtonRaphson() {
         }
         else {
             const Graph = [];
-            const step = Math.abs(latestData.start-arr.length) < 10 ? 0.1 : 1;
-            for (let i = parseFloat(latestData.start)-1; i < parseFloat(arr.length)+1; i += step) {
+            const step = Math.abs(inputs.start-arr.length) < 10 ? 0.1 : 1;
+            for (let i = parseFloat(inputs.start)-1; i < parseFloat(arr.length)+1; i += step) {
                 Graph.push(
                     {
                         x: i,
-                        y: evaluate(latestData.equation, {x: i}),
+                        y: evaluate(inputs.equation, {x: i}),
                     }
                 )
             }
@@ -108,7 +71,7 @@ function NewtonRaphson() {
                                     y: Graph.map((point)=> (point.y)),
                                     mode: "lines",
                                     marker: {color: 'blue'},
-                                    name: latestData.equation,
+                                    name: inputs.equation,
                                 },
                                 {
                                     x: arr.map((point)=> (point.x)),
@@ -135,7 +98,7 @@ function NewtonRaphson() {
 
     return(
         <Container>
-            <HistoryManager history={history} onFillClick={handleHistoryFill} updateHistory={updateHistory}/>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Newton Raphson</Card.Header>
                 <Card.Body>
@@ -149,10 +112,12 @@ function NewtonRaphson() {
                             <Form.Control value={xStart} onChange={inputX}></Form.Control>
                         </Form.Group>
                         <InputGroup>
-                            <Button variant="primary" onClick={calculator}>
-                                Calculate
-                            </Button>
-                                {saveBtn()}
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
                         </InputGroup>
                     </Form>
                 </Card.Body>

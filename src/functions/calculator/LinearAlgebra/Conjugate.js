@@ -70,6 +70,6 @@ export const CalConjugate = (matrixA, matrixB, size)=> {
         return m3;
     }
 
-    return {xArray, x}
+    return x
 
 }
