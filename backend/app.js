@@ -36,8 +36,9 @@ app.get(`/getHistory/:method`, (req, res)=> {
 app.post('/addHistory', (req, res) => {
     const ip_method = req.body.ip_method;
     const ip_json = req.body.ip_json;
+    const ip_type = req.body.ip_type;
 
-    db.query("INSERT INTO inputs (input_method, input_json) VALUES(?,?)", [ip_method, ip_json], (err, result)=> {
+    db.query("INSERT INTO inputs (input_method, input_json, input_type) VALUES(?,?,?)", [ip_method, ip_json, ip_type], (err, result)=> {
         if (err) {
             console.log(err);
         }

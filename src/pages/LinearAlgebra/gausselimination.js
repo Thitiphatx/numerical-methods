@@ -1,6 +1,8 @@
 import React from "react";
-import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
+import { Card, Form, Button, Row, Col, InputGroup, Container } from "react-bootstrap";
 import { useState } from "react";
+import { DatabaseManager } from "../../functions/DatabaseManager";
+import { CalGaussElimination } from "../../functions/calculator/LinearAlgebra/GaussElimination";
 
 function GaussElimination() {
     const [matrix, setMatrix] = useState([[2,3,2], [1,2,1], [2,3,5]]);
@@ -10,6 +12,23 @@ function GaussElimination() {
     const [finalResult, setFinalResult] = useState([0,0,0]);
     const [answerMatrix, setAnswerMatrix] = useState([[0,0,0], [0,0,0], [0,0,0]]);
     const [result, setResult] = useState([0, 0, 0]);
+    const [inputs, setInputs] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
+
+
+    // Database Handler
+    const METHOD = "GaussElim";
+    const TYPE = "Matrix";
+    const fillData = (inputJson) => {
+        setSize(inputJson.size);
+        setMatrix(inputJson.A);
+        setB(inputJson.B);
+    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputSize = (event)=> {
         if (event.target.value >= 2) {
@@ -45,50 +64,23 @@ function GaussElimination() {
     }
 
     const calculator = ()=> {
-        let arr = JSON.parse(JSON.stringify(matrix));
-        let answer = [...b];
+        let {arr, answer, newResult} = CalGaussElimination(matrix, b, size);
+        const newInputs = {
+            size: size,
+            A: matrix,
+            B: b,
+        };
         
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                if (arr[i][j] == 0) {
-                    arr[i][j] = 1e-14;
-                }
-            }
-            if (answer[i] == 0) {
-                answer[i] = 1e-14;
-            }
-        }
-
-        for (let i= 0; i < size; i++) {
-            for (let j = i+1; j < size; j++) {
-                let ratio = arr[j][i]/arr[i][i];
-                
-
-                for (let k = 0; k < size; k++) {
-                    arr[j][k] -= ratio * arr[i][k];
-                }
-                answer[j] -= ratio * answer[i];
-            }
-        }
-
-        const newResult = JSON.parse(JSON.stringify(answer));
-
-        for (let i = size-1; i >= 0; i--) {
-            for (let j = i+1; j < size; j++) {
-                newResult[i] -= arr[i][j]*newResult[j];
-            }
-            newResult[i] = newResult[i]/arr[i][i];
-        }
-
-
-
+        setSaveAble(true);
+        setInputs(newInputs);
         setAnswerMatrix(arr);
         setResult(answer);
         setFinalResult(newResult);
     }
 
     return(
-        <>
+        <Container>
+            {db.HistoryTab()}
             <Card as={Row} className="mb-3">
                 <Card.Header>Gauss Elimination</Card.Header>
                 <Card.Body>
@@ -135,7 +127,15 @@ function GaussElimination() {
                             </Col>
                             
                         </Form.Group>
+                        <InputGroup>
                         <Button variant="primary" onClick={calculator}>Calculate</Button>
+                        {saveAble && (
+                            <Button variant="outline-primary" onClick={saveInputs}>
+                                Save inputs
+                            </Button>
+                        )}
+                        </InputGroup>
+                        
                     </Form>
                 </Card.Body>
             </Card>
@@ -179,7 +179,7 @@ function GaussElimination() {
                 ))}
                 
             </Card>
-        </>
+        </Container>
     )
 }
 

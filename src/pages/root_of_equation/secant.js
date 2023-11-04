@@ -31,6 +31,9 @@ function Secant() {
         setFx(selectedValue.equation);
         setx0(selectedValue.x0);
         setx1(selectedValue.x1);
+        FetchManager(METHOD).then((data)=> {
+            setHistory(data);
+        });
     };
     const saveBtn = ()=> {
         const sendData = ()=> {
@@ -47,7 +50,7 @@ function Secant() {
             return null;
         }
     }
-    const updateHistory = () => {
+    const updateHistory = ({setRefetch}, ) => {
         let i = reFetch;
         setRefetch(++i);
     };

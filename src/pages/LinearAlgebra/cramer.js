@@ -1,13 +1,32 @@
 import React from "react";
 import { Card, Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { CalCramer } from "../../functions/calculator/LinearAlgebra/Cramer";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 
 function Cramer() {
     const [matrix, setMatrix] = useState([[2,3,2],[1,2,1], [2,3,5]]);
     const [b, setB] = useState([2,3,4])
     const [size, setSize] = useState(3);
     const [result, setResult] = useState([0, 0, 0]);
+    const [inputs, setInputs] = useState([]);
+    const [saveAble, setSaveAble] = useState(false);
 
+
+    // Database Handler
+    const METHOD = "Cramer";
+    const TYPE = "Matrix";
+    const fillData = (inputJson) => {
+        setSize(inputJson.size);
+        setMatrix(inputJson.A);
+        setB(inputJson.B);
+    };
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
+    
     const inputSize = (event)=> {
         if (event.target.value >= 2) {
             setSize(event.target.value);
@@ -40,75 +59,22 @@ function Cramer() {
         newB[index] = event.target.value;
         setB(newB);
     }
-
     const calculator = ()=> {
-        let mainMatrix = JSON.parse(JSON.stringify(matrix));
-        let answer = [...b];
-        let cramerResult = [];
-        for (let col = 0; col < size; col++) {
-            // re clone matrix
-            let arr = JSON.parse(JSON.stringify(matrix));
-
-            // replace a[i] with b
-            for (let row = 0; row < size; row++) {
-                arr[row][col] = answer[row];
-            }
-            let det = determinant(mainMatrix);
-            let detI = determinant(arr);
-            cramerResult.push(detI/det);
-        }
+        let cramerResult = CalCramer(matrix, b, size);
+        const newInputs = {
+            size: size,
+            A: matrix,
+            B: b
+        };
+        setInputs(newInputs);
         setResult(cramerResult);
-        
-    }
-
-    const determinant = (matrix)=> {
-        let row = 0;
-        let col = 0;
-        let top = 0;
-        let down = 0;
-        for (let i = 0; i < size; i++) {
-            col = i;
-            let temp_multiply = 1;
-            while(true) {
-                temp_multiply *= matrix[row][col];
-                row++;
-                col++;
-                if (row >= size) {
-                    row = 0;
-                    break;
-                }
-                if (col >= size) {
-                    col = 0;
-                }
-            }
-            top += temp_multiply;
-        }
-
-        row = 2;
-        col = 0;
-
-        for (let i = size-1; i >= 0; i--) {
-            col = Math.abs(i-2)
-            let temp_multiply = 1;
-            while (true) {
-                temp_multiply *= matrix[row][col];
-                row--;
-                col++;
-                if (row < 0) {
-                    row = 2;
-                    break;
-                }
-                if (col >= size) {
-                    col = 0;
-                }
-            }
-            down += temp_multiply;
-        }
-        return top-down;
+        setSaveAble(true);
     }
 
     return(
+        
         <Card>
+            {db.HistoryTab()}
             <Card.Header>Cramer's rule</Card.Header>
             <Card.Body>
                 <Form>
@@ -153,7 +119,16 @@ function Cramer() {
                         </Col>
                         
                     </Form.Group>
-                    <Button variant="primary" onClick={calculator}>Calculate</Button>
+                    <InputGroup>
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                        {saveAble && (
+                            <Button variant="outline-primary" onClick={saveInputs}>
+                                Save inputs
+                            </Button>
+                        )}
+                    </InputGroup>
                 </Form>
             </Card.Body>
             {result.map((x, index)=> (
