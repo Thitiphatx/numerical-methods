@@ -1,16 +1,36 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Form, ToggleButtonGroup, ToggleButton, Button } from "react-bootstrap";
-import { DifferentationOh } from "../../functions/calculator/differentialoh";
-import { DifferentationOh2 } from "../../functions/calculator/differentialoh2";
+import { Container, Row, Col, Card, Form, ToggleButtonGroup, ToggleButton, Button, InputGroup } from "react-bootstrap";
+import { DifferentationOh2 } from "../../functions/calculator/Differentation/differentialoh2";
+import { DifferentationOh } from "../../functions/calculator/Differentation/differentialoh";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 
 export default function DifferentialOh() {
     const [level, setLevel] = useState(1);
-    const [type, setType] = useState(1);
-    const [oh, setOh] = useState(2);
+    const [type, setType] = useState("Forward");
+    const [oh, setOh] = useState(1);
     const [FX, setFX] = useState("");
     const [hValue, sethValue] = useState(0);
     const [xTarget, setXtarget] = useState(0);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+  
+    const METHOD = "Differential";
+    const TYPE = "XY";
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setLevel(inputJson.level);
+        setType(inputJson.type);
+        setOh(inputJson.oh);
+        sethValue(inputJson.h);
+        setXtarget(inputJson.xTarget);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
+
 
     const diffLevel = [
         { label: "1", value: 1 },
@@ -19,9 +39,9 @@ export default function DifferentialOh() {
         { label: "4", value: 4 }
     ]
     const diffType = [
-        { label: "Forward", value: 1 },
-        { label: "Backward", value: 2 },
-        { label: "Central", value: 3 },
+        { label: "Forward", value: "Forward" },
+        { label: "Backward", value: "Backward" },
+        { label: "Central", value: "Central" },
     ]
 
     //input handlers
@@ -46,23 +66,35 @@ export default function DifferentialOh() {
 
     // calculate
     const calculator = ()=> {
+        let answer;
+        const newInputs = {
+            equation: FX,
+            level: level,
+            type: type,
+            oh: oh,
+            h: hValue,
+            xTarget: xTarget,
+        }
         try {
             if (oh === 1) {
-                setResult(DifferentationOh(FX, level, type, parseFloat(hValue), parseFloat(xTarget)));
+                answer = DifferentationOh(FX, level, type, parseFloat(hValue), parseFloat(xTarget));
             }
             else {
-                setResult(DifferentationOh2(FX, level, type, parseFloat(hValue), parseFloat(xTarget)));
+                answer = DifferentationOh2(FX, level, type, parseFloat(hValue), parseFloat(xTarget));
             }
         } catch (err) {
             console.log(err)
             setResult("Error, Please check your input");
         }
-        
+        setSaveAble(true);
+        setResult(answer);
+        setInputs(newInputs);
     }
     return (
         <Container>
+            {db.HistoryTab()}
             <Card className="mb-3">
-                <Card.Header>Divided Difference o(h)</Card.Header>
+                <Card.Header>Divided Difference</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3">
@@ -114,7 +146,14 @@ export default function DifferentialOh() {
                                 <Form.Control value={xTarget} onChange={inputX}></Form.Control>
                             </Col>
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import { Container, Card, Form, Col, Row, Button } from "react-bootstrap";
-import { evaluate } from "mathjs";
+import { Container, Card, Form, Col, Row, Button, InputGroup } from "react-bootstrap";
+import { CalTrapzoidal } from "../../functions/calculator/Integration/Trapezoidal";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 
 function Trapezoidal() {
     const [FX, setFX] = useState("");
@@ -9,6 +10,23 @@ function Trapezoidal() {
     const [end, setEnd] = useState(0);
     const [n, setN] = useState(2);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+
+    const METHOD = "Trapezoidal";
+    const TYPE = "XY";
+
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setStart(inputJson.start);
+        setEnd(inputJson.end);
+        setN(inputJson.n);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputFX = (e)=> {
         setFX(e.target.value);
@@ -24,37 +42,21 @@ function Trapezoidal() {
     }
 
     const calculator = ()=> {
-        let a = parseFloat(start);
-        let b = parseFloat(end);
-        let h;
-        let x0 = a;
-        const arrayF = [];
-        h = (b-a)/n;
-        let iteration = 0;
-        x = x0+iteration*h;
-        while(x <= b) {
-            arrayF.push(f(x));
-            x += h;
-        }
-        let I = 0;
-        for (let j = 0; j < arrayF.length; j++) {
-            if (j == 0 || j == arrayF.length-1) {
-                I += arrayF[j];
-            }
-            else {
-                I += 2*arrayF[j]; 
-            }
-        }
-        I *= h/2;
-        setResult(I);
-        function f(x) {
-            return evaluate(FX, {x});
-        }
-        
+        const answer = CalTrapzoidal(FX, start, end, n);
+        const newInputs = {
+            equation: FX,
+            start: start,
+            end: end,
+            n: n,  
+        };
+        setResult(answer);
+        setSaveAble(true);
+        setInputs(newInputs);
     }
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Trapezoidal</Card.Header>
                 <Card.Body>
@@ -79,7 +81,14 @@ function Trapezoidal() {
                             <Form.Control type="number" value={end} onChange={inputEnd}></Form.Control>
                         </Col>
                     </Form.Group>
-                    <Button onClick={calculator}>Calculate</Button>
+                    <InputGroup>
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                        {saveAble && (
+                            <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                        )}
+                    </InputGroup>
 
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

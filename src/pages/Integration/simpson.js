@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import { Container, Card, Form, Col, Row, Button } from "react-bootstrap";
-import { evaluate } from "mathjs";
+import { Container, Card, Form, Col, Row, Button, InputGroup } from "react-bootstrap";
+import { CalSimpson } from "../../functions/calculator/Integration/Simpson";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 
 function Simpson() {
     const [FX, setFX] = useState("");
@@ -9,6 +10,23 @@ function Simpson() {
     const [end, setEnd] = useState(0);
     const [n, setN] = useState(2);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+
+    const METHOD = "Simpson";
+    const TYPE = "XY";
+
+    const fillData = (inputJson)=> {
+        setFX(inputJson.equation);
+        setStart(inputJson.start);
+        setEnd(inputJson.end);
+        setN(inputJson.n);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     const inputFX = (e)=> {
         setFX(e.target.value);
@@ -24,42 +42,21 @@ function Simpson() {
     }
 
     const calculator = ()=> {
-        let a = parseFloat(start);
-        let b = parseFloat(end);
-        let h;
-        let x = a;
-
-        const arrayF = [];
-        h = (b-a)/n*2;
-        x = a;
-        while(x <= b) {
-            arrayF.push(f(x));
-            x += h;
-        }
-        let I = 0;
-        for (let j = 0; j < arrayF.length; j++) {
-            if (j == 0 || j == arrayF.length-1) {
-                I += arrayF[j];
-            }
-            else {
-                if (j % 2 == 0) {
-                    I += 2*arrayF[j]; 
-                }
-                else {
-                    I += 4*arrayF[j]; 
-                }
-            }
-        }
-            I *= h/3;
-        setResult(I);
-        function f(x) {
-            return evaluate(FX, {x});
-        }
-        
+        const answer = CalSimpson(FX, start, end, n);
+        const newInputs = {
+            equation: FX,
+            start: start,
+            end: end,
+            n: n,
+        };
+        setSaveAble(true);
+        setInputs(newInputs);
+        setResult(answer);
     }
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Simpson's Rules</Card.Header>
                 <Card.Body>
@@ -84,7 +81,14 @@ function Simpson() {
                             <Form.Control type="number" value={end} onChange={inputEnd}></Form.Control>
                         </Col>
                     </Form.Group>
-                    <Button onClick={calculator}>Calculate</Button>
+                    <InputGroup>
+                        <Button variant="primary" onClick={calculator}>
+                            Calculate
+                        </Button>
+                        {saveAble && (
+                            <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                        )}
+                    </InputGroup>
 
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

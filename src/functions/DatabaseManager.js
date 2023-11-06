@@ -78,14 +78,16 @@ export function DatabaseManager(method, {fillData}) {
               );
         } else if (type === "XY") {
             return (
-                keys.map((key, i) => (
-                    <InputGroup key={i}>
-                        <InputGroup.Text>{key}</InputGroup.Text>
-                        <Form.Control value={inputJson[key]} readOnly />
+              <div className="flex-wrap">
+                {keys.map((key, i) => (
+                    <InputGroup key={i} className="col-md-6">
+                      <InputGroup.Text>{key}</InputGroup.Text>
+                      <Form.Control value={inputJson[key]} readOnly />
                     </InputGroup>
-                ))
+                ))}
+              </div>
             );
-        } else if (type === "Points") {
+          } else if (type === "Points") {
             return (
                 <div>
                     <Row>
@@ -137,7 +139,7 @@ export function DatabaseManager(method, {fillData}) {
                         )))}
                         <tr>
                             <th>y</th>
-                            {inputJson["y"].map((y, index) => (
+                            {inputJson["y"].map((y) => (
                                 <td>{y}</td>
                             ))}
                         </tr>
