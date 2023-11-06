@@ -1,11 +1,12 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Row, Card, Button, Form, InputGroup } from "react-bootstrap";
 import { evaluate } from "mathjs";
 import { generateTable } from "../../functions/calculator/generateTable";
 import Plot from "react-plotly.js";
 import { CalNewtonRaph } from "../../functions/calculator/Root of Equation/NewtonRaphson";
 import { DatabaseManager } from "../../functions/DatabaseManager";
+
 function NewtonRaphson() {
     const [FX, setFX] = useState("");
     const [xStart, setxStart] = useState(0);

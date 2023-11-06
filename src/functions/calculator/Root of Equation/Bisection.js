@@ -8,7 +8,7 @@ export const CalBisection = (XL, XR, FX)=> {
     let Xm_old = 0;
     let e = 0.000001;
 
-    while(Math.abs((Xm-Xm_old)/Xm * 100) >= e) {
+    while(Math.abs(((Xm-Xm_old)/Xm )* 100) >= e) {
         let fXr = evaluate(FX, {x: Xr});
         if (fXr * fXm > 0) {
             Xr = Xm;

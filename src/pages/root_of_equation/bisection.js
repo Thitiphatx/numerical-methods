@@ -4,6 +4,7 @@ import { generateTable } from "../../functions/calculator/generateTable";
 import Plot from "react-plotly.js";
 import { CalBisection } from "../../functions/calculator/Root of Equation/Bisection";
 import { DatabaseManager } from "../../functions/DatabaseManager";
+import { evaluate } from "mathjs";
 const Bisection =()=>{
 
     // declare useState
@@ -61,19 +62,13 @@ const Bisection =()=>{
         }
         else {
             const Graph = [];
-            for (let i = parseFloat(inputs.start)-1; i < parseFloat(inputs.end)+1; i++) {
-                const x = i
-                try {
-                    const fx = evaluate(inputs.equation, {x: i})
-                    Graph.push({
-                        x,
-                        y: fx,
-                    })
-                }
-                catch (e) {
-                    
-                }
+            for (let i = inputs.start; i < inputs.end; i++) {
+                Graph.push({
+                    x: i,
+                    y: evaluate(inputs.equation, {x: i})
+                })
             }
+            
             return (
                 <Card as={Row} className="mb-3">
                     <Card.Header>Plot</Card.Header>

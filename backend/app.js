@@ -5,6 +5,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.listen(3001, ()=> {
+    console.log("Server started")
+})
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -55,8 +58,4 @@ app.delete('/delete/:id', (req, res)=> {
             res.send(result);
         }
     })
-})
-
-app.listen(3001, ()=> {
-    console.log("Server started")
 })

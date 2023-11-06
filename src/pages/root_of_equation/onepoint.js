@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Card, Form, Button, Row, InputGroup } from 'react-bootstrap';
 import { evaluate } from 'mathjs';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { generateTable } from '../../functions/calculator/generateTable';
 import Plot from 'react-plotly.js';
 import { CalOnepoint } from '../../functions/calculator/Root of Equation/Onepoint';
@@ -20,7 +20,7 @@ function Onepoint() {
 
     const fillData = (inputJson)=> {
         setFX(inputJson.equation);
-        setxStart(inputJson.start);
+        setXStart(inputJson.start);
     }
     const db = DatabaseManager(METHOD, {fillData});
     const saveInputs = ()=> {

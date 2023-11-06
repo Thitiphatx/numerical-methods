@@ -85,6 +85,31 @@ export function DatabaseManager(method, {fillData}) {
                     </InputGroup>
                 ))
             );
+        } else if (type === "Points") {
+            return (
+                <div>
+                    <Row>
+                        <Col>
+                            {inputJson["points"].map((point, index) => (
+                                <InputGroup key={index}>
+                                    <InputGroup.Text>{"x"+index}</InputGroup.Text>
+                                    <Form.Control value={point.x} readOnly></Form.Control>
+                                    <Form.Control value={point.fx} readOnly></Form.Control>
+                                </InputGroup>
+                            ))}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <InputGroup>
+                                <InputGroup.Text>xTarget</InputGroup.Text>
+                                <Form.Control value={inputJson["xTarget"]} readOnly></Form.Control>
+                            </InputGroup>
+                        </Col>
+                    </Row>
+                </div>
+                
+            );
         }
     }
 
