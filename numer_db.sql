@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2023 at 07:08 PM
+-- Generation Time: Nov 06, 2023 at 04:49 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -53,8 +53,18 @@ INSERT INTO `inputs` (`input_id`, `input_method`, `input_json`, `input_type`) VA
 (132, 'Graphical', '{\"equation\":\"5-x\",\"start\":\"0\"}', 'XY'),
 (133, 'Falseposition', '{\"equation\":\"5-x\",\"start\":\"0\",\"end\":\"10\"}', 'XY'),
 (134, 'Newtonraph', '{\"equation\":\"5-x\",\"start\":0}', 'XY'),
-(135, 'Bisection', '{\"equation\":\"5-x\",\"x0\":0,\"x1\":\"1\"}', 'XY'),
-(136, 'Onepoint', '{\"equation\":\"5-x\",\"start\":0}', 'XY');
+(136, 'Onepoint', '{\"equation\":\"5-x\",\"start\":0}', 'XY'),
+(140, 'Bisection', '{\"equation\":\"5-x\",\"start\":0,\"end\":\"10\"}', 'XY'),
+(151, 'Spline', '{\"size\":\"5\",\"points\":[{\"x\":\"2\",\"fx\":\"9.5\"},{\"x\":\"4\",\"fx\":\"8\"},{\"x\":\"6\",\"fx\":\"10.5\"},{\"x\":\"8\",\"fx\":\"39.5\"},{\"x\":\"10\",\"fx\":\"72.5\"}],\"xTarget\":4.5}', 'Points'),
+(152, 'LAGRANGE', '{\"size\":3,\"points\":[{\"x\":\"1\",\"y\":\"2\"},{\"x\":\"3\",\"y\":\"4\"},{\"x\":\"5\",\"y\":\"6\"}],\"xTarget\":\"7\"}', 'Points'),
+(154, 'LAGRANGE', '{\"size\":\"3\",\"points\":[{\"x\":\"1\",\"y\":\"2\"},{\"x\":\"3\",\"y\":\"4\"},{\"x\":\"5\",\"y\":\"6\"}],\"xTarget\":\"7\"}', 'Points'),
+(156, 'LinearLeastSquare', '{\"size\":\"9\",\"points\":[{\"x\":\"10\",\"y\":\"5\"},{\"x\":\"15\",\"y\":\"9\"},{\"x\":\"20\",\"y\":\"15\"},{\"x\":\"30\",\"y\":\"18\"},{\"x\":\"40\",\"y\":\"22\"},{\"x\":\"50\",\"y\":\"30\"},{\"x\":\"60\",\"y\":\"35\"},{\"x\":\"70\",\"y\":\"38\"},{\"x\":\"80\",\"y\":\"43\"}],\"xTarget\":\"65\",\"orderM\":\"5\"}', 'Points'),
+(157, 'LinearLeastSquare', '{\"size\":\"9\",\"points\":[{\"x\":\"10\",\"y\":\"5\"},{\"x\":\"15\",\"y\":\"9\"},{\"x\":\"20\",\"y\":\"15\"},{\"x\":\"30\",\"y\":\"18\"},{\"x\":\"40\",\"y\":\"22\"},{\"x\":\"50\",\"y\":\"30\"},{\"x\":\"60\",\"y\":\"35\"},{\"x\":\"70\",\"y\":\"38\"},{\"x\":\"80\",\"y\":\"43\"}],\"xTarget\":\"65\",\"orderM\":\"1\"}', 'Points'),
+(160, 'MultiLeastSquare', '{\"x\":[[0,1,2]],\"y\":[0,1,2],\"xTarget\":0}', 'Table'),
+(161, 'MultiLeastSquare', '{\"x\":[[0,1,2],[0,0,0],[0,0,0],[0,0,0]],\"y\":[0,1,2],\"xTarget\":0}', 'Table'),
+(163, 'Simpson', '{\"equation\":\"4(x^5)-3(x^4)+(x^3)-6x+2\",\"start\":\"2\",\"end\":\"8\",\"n\":2}', 'XY'),
+(164, 'Trapezoidal', '{\"equation\":\"4(x^5)-3(x^4)+(x^3)-6x+2\",\"start\":\"2\",\"end\":\"8\",\"n\":2}', 'XY'),
+(166, 'Differential', '{\"equation\":\"5-x\",\"level\":4,\"type\":\"Backward\",\"oh\":1,\"h\":\"022\",\"xTarget\":\"3\"}', 'XY');
 
 --
 -- Indexes for dumped tables
@@ -74,7 +84,7 @@ ALTER TABLE `inputs`
 -- AUTO_INCREMENT for table `inputs`
 --
 ALTER TABLE `inputs`
-  MODIFY `input_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `input_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
