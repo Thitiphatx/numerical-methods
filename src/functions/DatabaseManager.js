@@ -123,6 +123,28 @@ export function DatabaseManager(method, {fillData}) {
                 </div>
                 
             );
+        } else if (type ===  "Table" ) {
+            return (
+                <Table bordered responsive>
+                    <tbody>
+                        {inputJson["x"].map(((x, index) => (
+                            <tr key={index}>
+                                <th>x{index+1}</th>
+                                {x.map((val, idx) => (
+                                    <td key={idx}>{val}</td>
+                                ))}
+                            </tr>
+                        )))}
+                        <tr>
+                            <th>y</th>
+                            {inputJson["y"].map((y, index) => (
+                                <td>{y}</td>
+                            ))}
+                        </tr>
+                        
+                    </tbody>
+                </Table>
+            )
         }
     }
 

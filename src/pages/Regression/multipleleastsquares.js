@@ -1,14 +1,29 @@
 import React from "react";
 import { Container, Row, Col, Form, Card, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
-import { GaussJordanReplace } from "../../functions/calculator/LinearAlgebra/gaussJordan";
+import { CalMultipleLeast } from "../../functions/calculator/Regression/Leastquare";
+import { DatabaseManager } from '../../functions/DatabaseManager';
 
 export default function MultipleLeastSquares() {
     const [arrayX, setArrayX] = useState([[0,1,2]])
     const [arrayY, setArrayY] = useState([0,1,2]);
-    const [targetX, setTargetX] = useState(0);
+    const [xTarget, setxTarget] = useState(0);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
 
+    const METHOD = "MultiLeastSquare";
+    const TYPE = "Table";
+    const fillData = (inputJson)=> {
+        setArrayX(inputJson.x);
+        setArrayY(inputJson.y);
+        setxTarget(inputJson.xTarget);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     // input controller
     const addX = ()=> {
@@ -54,68 +69,25 @@ export default function MultipleLeastSquares() {
         newArray[index] = e.target.value;
         setArrayY(newArray);
     }
-    const inputTargetX = (e)=> {
-        setTargetX(e.target.value);
+    const inputxTarget = (e)=> {
+        setxTarget(e.target.value);
     }
 
     const calculator = ()=> {
-        let x = arrayX.map((set)=> set.map((data)=> parseFloat(data)));
-        let y = arrayY.map((data)=> parseFloat(data));
-        let m = x.length;
-
-        const arr = Array.from({ length: m+1 }, () => Array(m+1).fill(0));
-        let answer = []
-        arr[0][0] = arrayX[0].length;
-
-        for (let i = 1; i < m+1; i++) {
-            let sumX = 0;
-            for (let j = 0; j < y.length; j++) {
-                sumX += x[i - 1][j];
-            }
-            arr[0][i] = sumX;
-        }
-
-
-        for (let i = 1; i < m+1; i++) {
-            for (let j = 0; j < m+1; j++) {
-                let sumX = 0;
-                for (let k = 0; k < y.length; k++) {
-                    if (j === 0) {
-                        sumX += x[i-1][k];
-                    } else {
-                        sumX += x[j - 1][k] * x[i - 1][k];
-                    }
-                }
-                arr[i][j] = sumX;
-            }
-        }
-
-        for (let i = 0; i < m+1; i++) {
-            let sumXY = 0;
-            for (let j = 0; j < y.length; j++) {
-                if (i === 0) {
-                    sumXY += y[j];
-                } else {
-                    sumXY += y[j] * x[i - 1][j];
-                }
-            }
-            answer[i] = sumXY;
-        }
-        function f(x) {
-            let A = GaussJordanReplace(arr, answer);
-            let resultX = A[0];
-
-            for (let i = 1; i < A.length; i++) {
-                resultX += A[i]*Math.pow(x,i);
-            }
-            console.log(A)
-            return resultX;
-        }
-        setResult(f(parseFloat(targetX)))
+        const answer = CalMultipleLeast(arrayX, arrayY, xTarget)
+        const newInputs = {
+            x: arrayX,
+            y: arrayY,
+            xTarget: xTarget
+        };
+        setSaveAble(true);
+        setInputs(newInputs)
+        setResult(answer);
     }
 
     return (
         <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Multiple Least Squares</Card.Header>
                 <Card.Body>
@@ -158,11 +130,16 @@ export default function MultipleLeastSquares() {
                             <Col>
                                 <InputGroup>
                                     <InputGroup.Text>target X</InputGroup.Text>
-                                    <Form.Control value={targetX} onChange={inputTargetX}></Form.Control>
+                                    <Form.Control value={xTarget} onChange={inputxTarget}></Form.Control>
                                 </InputGroup>
                             </Col>
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

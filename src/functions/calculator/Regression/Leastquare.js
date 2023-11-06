@@ -1,9 +1,9 @@
-import { GaussJordanSwap } from "../LinearAlgebra/gaussJordan";
+import { GaussJordanSwap, GaussJordanReplace } from "../LinearAlgebra/gaussJordan";
 
-export const CalLeastSquare = (arrayPoints, targetX, m) => {
+export const CalLeastSquare = (arrayPoints, xTarget, m) => {
     const x = arrayPoints.map((e)=> (parseFloat(e.x)));
     const y = arrayPoints.map((e)=> (parseFloat(e.y)));
-    const xTarget = parseFloat(targetX);
+    xTarget = parseFloat(xTarget);
     const ARRAY_SIZE = parseInt(m)+1;
     const arr = Array.from({ length: ARRAY_SIZE }, () => Array.from({ length: ARRAY_SIZE }, () => 0));
     const answer = [];
@@ -51,6 +51,54 @@ export const CalLeastSquare = (arrayPoints, targetX, m) => {
     return result;
 }
 
-export const CalMultipleLeast = ()=> {
-    
+export const CalMultipleLeast = (arrayX, arrayY, xTarget)=> {
+    let x = arrayX.map((set)=> set.map((data)=> parseFloat(data)));
+    let y = arrayY.map((data)=> parseFloat(data));
+    let m = x.length;
+    xTarget = parseFloat(xTarget);
+    const arr = Array.from({ length: m+1 }, () => Array(m+1).fill(0));
+    let answer = []
+    arr[0][0] = arrayX[0].length;
+
+    for (let i = 1; i < m+1; i++) {
+        let sumX = 0;
+        for (let j = 0; j < y.length; j++) {
+            sumX += x[i - 1][j];
+        }
+        arr[0][i] = sumX;
+    }
+
+
+    for (let i = 1; i < m+1; i++) {
+        for (let j = 0; j < m+1; j++) {
+            let sumX = 0;
+            for (let k = 0; k < y.length; k++) {
+                if (j === 0) {
+                    sumX += x[i-1][k];
+                } else {
+                    sumX += x[j - 1][k] * x[i - 1][k];
+                }
+            }
+            arr[i][j] = sumX;
+        }
+    }
+
+    for (let i = 0; i < m+1; i++) {
+        let sumXY = 0;
+        for (let j = 0; j < y.length; j++) {
+            if (i === 0) {
+                sumXY += y[j];
+            } else {
+                sumXY += y[j] * x[i - 1][j];
+            }
+        }
+        answer[i] = sumXY;
+    }
+    let A = GaussJordanReplace(arr, answer);
+    let resultX = A[0];
+
+    for (let i = 1; i < A.length; i++) {
+        resultX += A[i]*Math.pow(xTarget,i);
+    }
+    return resultX;
 }
