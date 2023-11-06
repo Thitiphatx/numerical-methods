@@ -1,13 +1,37 @@
 import React from 'react';
 import { Container, Row, Col, Button, Form, Card, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import { DatabaseManager } from '../../functions/DatabaseManager';
+import { CalLagrange } from '../../functions/calculator/Interpolation/Lagrange';
 
 function Lagrange() {
     const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
     const [targetX, setTargetX] = useState(0);
-    const [size, setSize] = useState(3);
-
+    const [size, setSize] = useState(1);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+
+    const METHOD = "Lagrange";
+    const TYPE = "Points";
+    const fillData = (inputJson)=> {
+        const newInputs = [];
+        inputJson.points.map((point) => {
+            newInputs.push({
+                x: point.x,
+                y: point.y,
+            });
+        })
+        setSize(inputJson.size);
+        setArrayPoints(newInputs);
+        setTargetX(inputJson.xTarget);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
+
 
     // input handler
     const inputSize = (e)=> {
@@ -32,10 +56,12 @@ function Lagrange() {
     const inputX = (e, index)=> {
         const newArr = [...arrayPoints];
         newArr[index].x = e.target.value;
+        setArrayPoints(newArr);
     }
     const inputY = (e, index)=> {
         const newArr = [...arrayPoints];
         newArr[index].y = e.target.value;
+        setArrayPoints(newArr);
     }
     const inputTargetX = (e)=> {
         setTargetX(e.target.value);
@@ -43,24 +69,19 @@ function Lagrange() {
 
 
     const calculator = () => {
-        const x = arrayPoints.map((e)=> (parseFloat(e.x)));
-        const y = arrayPoints.map((e)=> (parseFloat(e.y)));
-        let resultX = 0;
-        let X = targetX;
-
-        for (let i = 0; i < x.length; i++) {
-            let L = 1;
-            for (let j = 0; j < x.length; j++) {
-                if (i === j) continue;
-                L *= (x[j] - X) / (x[j] - x[i]);
-            }
-            resultX += y[i]*L;
+        let answer = CalLagrange(arrayPoints, targetX);
+        const newInputs = {
+            size: size,
+            points: arrayPoints.map(point => ({ x: point.x, y: point.y })),
+            xTarget: targetX,
         }
-
-        setResult(resultX);
+        setInputs(newInputs);
+        setSaveAble(true);
+        setResult(answer);
     }
         return(
             <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Lagrange</Card.Header>
                 <Card.Body>
@@ -80,13 +101,13 @@ function Lagrange() {
                                 <Col>
                                 <InputGroup>
                                     <InputGroup.Text>{"x"+index}</InputGroup.Text>
-                                    <Form.Control onChange={(e)=> inputX(e, index)}></Form.Control>
+                                    <Form.Control value={arrayPoints[index].x} onChange={(e)=> inputX(e, index)}></Form.Control>
                                 </InputGroup>
                                 </Col>
                                 <Col>
                                 <InputGroup>
                                     <InputGroup.Text>{"y"+index}</InputGroup.Text>
-                                    <Form.Control onChange={(e)=> inputY(e, index)}></Form.Control>
+                                    <Form.Control value={arrayPoints[index].y} onChange={(e)=> inputY(e, index)}></Form.Control>
                                 </InputGroup>
                                 </Col>
                             </Form.Group>
@@ -99,7 +120,13 @@ function Lagrange() {
                             </InputGroup>
                             
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
+                        
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

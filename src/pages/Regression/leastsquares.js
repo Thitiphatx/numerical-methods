@@ -1,13 +1,38 @@
 import React from 'react';
 import { Container, Row, Col, Button, Form, Card, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import { CalLeastSquare } from '../../functions/calculator/Regression/Leastquare';
+import { DatabaseManager } from '../../functions/DatabaseManager';
 
 function LinearLeastSquares() {
     const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
     const [targetX, setTargetX] = useState(0);
-    const [size, setSize] = useState(3);
-
+    const [size, setSize] = useState(1);
+    const [orderM, setOrderM] = useState(1);
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+
+    const METHOD = "LinearLeastSquare";
+    const TYPE = "Points";
+    const fillData = (inputJson)=> {
+        const newInputs = [];
+        inputJson.points.map((point) => {
+            newInputs.push({
+                x: point.x,
+                y: point.y,
+            });
+        })
+        setSize(inputJson.size);
+        setArrayPoints(newInputs);
+        setTargetX(inputJson.xTarget);
+        setOrderM(inputJson.orderM);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     // input handler
     const inputSize = (e)=> {
@@ -42,28 +67,26 @@ function LinearLeastSquares() {
     const inputTargetX = (e)=> {
         setTargetX(e.target.value);
     }
+    const inputOrderM = (e)=> {
+        setOrderM(e.target.value);
+    }
 
 
     const calculator = () => {
-        const x = arrayPoints.map((e)=> (parseFloat(e.x)));
-        const y = arrayPoints.map((e)=> (parseFloat(e.y)));
-        const xTarget = parseFloat(targetX);
-        let matrix = new Array(2).fill(new Array(2).fill(0));
-        let answer = new Array(2).fill(0);
-
-        for (let i = 0; i < size; i++) {
-            matrix[0][1] += x[i];
-            matrix[1][0] += x[i];
-            matrix[1][1] += Math.pow(x[i],2);
-
-            answer[0] += y[i];
-            answer[1] += x[i]*y[i];
-        }
-
-        setResult(A[0]+xTarget*A[1]);
+        const newInputs = {
+            size: size,
+            points: arrayPoints.map((point) => ({ x: point.x, y: point.y })),
+            xTarget: targetX,
+            orderM: orderM
+        };
+        const answer = CalLeastSquare(arrayPoints, targetX, orderM);
+        setInputs(newInputs);
+        setResult(answer);
+        setSaveAble(true);
     }
         return(
             <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Linear Regression</Card.Header>
                 <Card.Body>
@@ -83,26 +106,40 @@ function LinearLeastSquares() {
                                 <Col>
                                 <InputGroup>
                                     <InputGroup.Text>{"x"+index}</InputGroup.Text>
-                                    <Form.Control onChange={(e)=> inputX(e, index)}></Form.Control>
+                                    <Form.Control value={arrayPoints[index].x} onChange={(e)=> inputX(e, index)}></Form.Control>
                                 </InputGroup>
                                 </Col>
                                 <Col>
                                 <InputGroup>
                                     <InputGroup.Text>{"y"+index}</InputGroup.Text>
-                                    <Form.Control onChange={(e)=> inputY(e, index)}></Form.Control>
+                                    <Form.Control value={arrayPoints[index].y} onChange={(e)=> inputY(e, index)}></Form.Control>
                                 </InputGroup>
                                 </Col>
                             </Form.Group>
                             ))}
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <InputGroup>
-                                <InputGroup.Text>target X</InputGroup.Text>
-                                <Form.Control value={targetX} onChange={(e)=> inputTargetX(e)}></Form.Control>
-                            </InputGroup>
+                            <Col>
+                                <InputGroup>
+                                    <InputGroup.Text>target X</InputGroup.Text>
+                                    <Form.Control value={targetX} onChange={(e)=> inputTargetX(e)}></Form.Control>
+                                </InputGroup>
+                            </Col>
+                            <Col>
+                                <InputGroup>
+                                    <InputGroup.Text>order (m)</InputGroup.Text>
+                                    <Form.Control value={orderM} onChange={(e)=> inputOrderM(e)}></Form.Control>
+                                </InputGroup>
+                            </Col>
+                            
                             
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

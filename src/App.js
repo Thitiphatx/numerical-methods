@@ -35,8 +35,9 @@ import Jacobi from './pages/LinearAlgebra/jacobi';
 import GaussSeidel from './pages/LinearAlgebra/gaussseidel';
 import ConjugateGradient from './pages/LinearAlgebra/conjugategradient';
 import NewtonDivided from './pages/Interpolation/newtondivided';
-import LinearLeastSquares from './pages/Regression/linearleastsquares';
-import PolyLeastSquares from './pages/Regression/polynomialleastsquares';
+
+// Regression
+import LeastSquares from './pages/Regression/leastsquares';
 import MultipleLeastSquares from './pages/Regression/multipleleastsquares';
 import DifferentialOh from './pages/differentiation/differentialoh';
 
@@ -68,8 +69,7 @@ function App() {
               <Route path="/gaussseideliteration" element={<GaussSeidel />} />
               <Route path="/conjugategradient" element={<ConjugateGradient />} />
               <Route path="/newtondivided" element={<NewtonDivided />} />
-              <Route path="/linearleastsquares" element={<LinearLeastSquares />} />
-              <Route path="/polyleastsquares" element={<PolyLeastSquares />} />
+              <Route path="/leastsquares" element={<LeastSquares />} />
               <Route path="/multileastsquares" element={<MultipleLeastSquares />} />
               <Route path="/differentialoh" element={<DifferentialOh />} />
             </Routes>

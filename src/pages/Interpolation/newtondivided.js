@@ -1,13 +1,36 @@
 import React from "react";
 import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
+import { CalNewtondivide } from "../../functions/calculator/Interpolation/Newtondivide";
+import { DatabaseManager } from "../../functions/DatabaseManager";
 
 function NewtonDivided() {
     const [arrayPoints, setArrayPoints] = useState([{x: 0, y: 0}]);
     const [targetX, setTargetX] = useState(0);
     const [size, setSize] = useState(3);
-
     const [result, setResult] = useState(0);
+    const [saveAble, setSaveAble] = useState(false);
+    const [inputs, setInputs] = useState([]);
+
+    const METHOD = "Newtondivide";
+    const TYPE = "Points";
+    const fillData = (inputJson)=> {
+        const newInputs = [];
+        inputJson.points.map((point) => {
+            newInputs.push({
+                x: point.x,
+                y: point.y,
+            });
+        })
+        setSize(inputJson.size);
+        setArrayPoints(newInputs);
+        setTargetX(inputJson.xTarget);
+    }
+    const db = DatabaseManager(METHOD, {fillData});
+    const saveInputs = ()=> {
+        db.PostData(inputs, TYPE);
+        setSaveAble(false);
+    }
 
     // input handler
     const inputSize = (e)=> {
@@ -45,36 +68,20 @@ function NewtonDivided() {
 
     // calculate
     const calculator = ()=> {
-        function getC(start, end) {
-            if (start == end) {
-              return y[start];
-            }
-          
-            const term1 = getC(start + 1, end);
-            const term2 = getC(start, end - 1);
-          
-            return (term1 - term2) / (x[end] - x[start]);
+        let answer = CalNewtondivide(arrayPoints, targetX);
+        const newInputs = {
+            size: size,
+            points: arrayPoints.map(point => ({ x: point.x, y: point.y })),
+            xTarget: targetX,
         }
-        function getF(X) {
-            const n = x.length;
-            let result = y[0];
-            let term = 1;
-        
-            for (let i = 1; i < n; i++) {
-                term *= (X - x[i - 1]);
-                result += getC(0, i) * term;
-            }
-        
-            return result;
-        }
+        setInputs(newInputs);
+        setSaveAble(true);
+        setResult(answer);
 
-        let x = arrayPoints.map((e)=> (parseFloat(e.x)));
-        let y = arrayPoints.map((e)=> (parseFloat(e.y)));
-
-        setResult(getF(targetX));
     }
     return (
         <Container>
+            {db.HistoryTab()}
             <Card>
                 <Card.Header>Newton divided difference</Card.Header>
                 <Card.Body>
@@ -113,7 +120,12 @@ function NewtonDivided() {
                             </InputGroup>
                             
                         </Form.Group>
-                        <Button onClick={calculator}>Calculate</Button>
+                        <InputGroup>
+                            <Button onClick={calculator}>Calculate</Button>
+                            {saveAble && (
+                                <Button variant="outline-primary" onClick={saveInputs}>Save inputs</Button>
+                            )}
+                        </InputGroup>
                     </Form>
                 </Card.Body>
                 <Card.Footer>Answer : {result}</Card.Footer>

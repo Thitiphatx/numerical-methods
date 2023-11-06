@@ -1,4 +1,4 @@
-import { GaussJordanReplace } from "../gaussJordan";
+import { GaussJordanReplace } from "./gaussJordan";
 
 export const CalMatrixInversion = (Amatrix, Bmatrix, size)=> {
     const MatrixMultiply = (I, b)=> {

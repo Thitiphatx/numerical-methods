@@ -5,7 +5,7 @@ import { DatabaseManager } from "../../functions/DatabaseManager";
 
 export default function Spline() {
   const [splineType, setSplineType] = useState("Linear");
-  const [points, setPoints] = useState([{x: 0,fx: 0,}]);
+  const [points, setPoints] = useState([{x: 0,y: 0,}]);
   const [size, setSize] = useState(1);
   const [xTarget, setxTarget] = useState(0);
   const [result, setResult] = useState(0);
@@ -19,7 +19,7 @@ export default function Spline() {
     inputJson.points.map((point) => {
       newPoints.push({
         x: point.x,
-        fx: point.fx,
+        y: point.y,
       })
     })
     setSize(inputJson.size);
@@ -48,7 +48,7 @@ export default function Spline() {
     for (let i = newPoints.length; i < size; i++) {
       newPoints.push({
         x: 0,
-        fx: 0,
+        y: 0,
       })
     }
     setPoints(newPoints);
@@ -63,7 +63,7 @@ export default function Spline() {
   }
   const inputFX = (event, index)=> {
     const newPoints = [...points];
-    newPoints[index].fx = event.target.value || 0;
+    newPoints[index].y = event.target.value || 0;
     setPoints(newPoints);
   }
   const inputxTarget = (event)=> {
@@ -75,10 +75,9 @@ export default function Spline() {
     let targetX = parseFloat(xTarget);
     const newInputs = {
       size: size,
-      points: points.map(point => ({ x: point.x, fx: point.fx })),
+      points: points.map(point => ({ x: point.x, y: point.y })),
       xTarget: targetX,
     }
-    console.log(targetX);
     if (splineType == "Linear") {
       answer = CalLinearSpline(points, targetX);
     }
@@ -133,7 +132,7 @@ export default function Spline() {
                 <Col>
                   <InputGroup>
                     <InputGroup.Text>{"fx"+index}</InputGroup.Text>
-                    <Form.Control value={points[index].fx} onChange={(e)=> inputFX(e, index)}></Form.Control>
+                    <Form.Control value={points[index].y} onChange={(e)=> inputFX(e, index)}></Form.Control>
                   </InputGroup>
                 </Col>
               </Form.Group>

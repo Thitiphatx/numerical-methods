@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Form, Card, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
-import { GaussJordanReplace } from "../../functions/calculator/gaussJordan";
+import { GaussJordanReplace } from "../../functions/calculator/LinearAlgebra/gaussJordan";
 
 export default function MultipleLeastSquares() {
     const [arrayX, setArrayX] = useState([[0,1,2]])

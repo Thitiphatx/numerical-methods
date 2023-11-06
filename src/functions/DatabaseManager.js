@@ -89,22 +89,35 @@ export function DatabaseManager(method, {fillData}) {
             return (
                 <div>
                     <Row>
-                        <Col>
+                        <Col xs={6}>
                             {inputJson["points"].map((point, index) => (
-                                <InputGroup key={index}>
-                                    <InputGroup.Text>{"x"+index}</InputGroup.Text>
-                                    <Form.Control value={point.x} readOnly></Form.Control>
-                                    <Form.Control value={point.fx} readOnly></Form.Control>
-                                </InputGroup>
+                                <div className="d-flex" key={index}>
+                                    <InputGroup>
+                                        <InputGroup.Text>{"x"+index}</InputGroup.Text>
+                                        <Form.Control value={point.x} readOnly></Form.Control>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroup.Text>{"y"+index}</InputGroup.Text>
+                                        <Form.Control value={point.y} readOnly></Form.Control>
+                                    </InputGroup>
+                                </div>
+                                
                             ))}
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
-                            <InputGroup>
-                                <InputGroup.Text>xTarget</InputGroup.Text>
-                                <Form.Control value={inputJson["xTarget"]} readOnly></Form.Control>
-                            </InputGroup>
+                        <Col xs={6}>
+                            <div className="d-flex">
+                                <InputGroup>
+                                    <InputGroup.Text>xTarget</InputGroup.Text>
+                                    <Form.Control value={inputJson["xTarget"]} readOnly></Form.Control>
+                                </InputGroup>
+                                <InputGroup>
+                                    <InputGroup.Text>m</InputGroup.Text>
+                                    <Form.Control value={inputJson["orderM"]} readOnly></Form.Control>
+                                </InputGroup>
+                            </div>
+                            
                         </Col>
                     </Row>
                 </div>

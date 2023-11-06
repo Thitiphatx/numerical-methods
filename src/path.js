@@ -83,18 +83,14 @@ export const methodsPath = [
         ]
     },
     {
-        title: "Least Squares",
+        title: "Regression",
         path: [
             {
-                label: "Linear Regression",
-                id: "/linearleastsquares"
+                label: "Least Square",
+                id: "/leastsquares"
             },
             {
-                label: "Polynomial Regression",
-                id: "/polyleastsquares"
-            },
-            {
-                label: "Multiple Regression",
+                label: "Multiple Least Square",
                 id: "/multileastsquares"
             },
         ]
